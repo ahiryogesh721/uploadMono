@@ -17,9 +17,9 @@ const moneyPost = async (req, res) => {
     const result = await moneyModel.create({
       I: lastEntry === null ? 1 : lastEntry.I + 1,
       X,
-      players: players,
-      playersBets: playersBets,
-      playersGets: playersGets,
+      players,
+      playersBets,
+      playersGets,
       inout: parseInt(inout),
       buger:
         lastEntry === null
@@ -29,7 +29,6 @@ const moneyPost = async (req, res) => {
     if (result) {
       io.emit("banger", result);
     }
-    console.log("new bet entry:", result);
   }
   res.sendStatus(200);
 };
@@ -40,16 +39,16 @@ const moneyGet = async (req, res) => {
 };
 
 const records = async (req, res) => {
-  const { iPOint, iPointSBuger, iPointEBuger } = req.body;
+  const { iPOint, number } = req.body;
   const lastEntry = await recordsModel.findOne().sort({ _id: -1 }).exec();
-  if (iPOint > lastEntry?.iPOint + 5 || lastEntry === null) {
+  if (iPOint > lastEntry?.iPOint + 10 || lastEntry === null) {
     const result = await recordsModel.create({
+      number,
       iPOint,
-      iPointSBuger,
-      iPointEBuger,
     });
+    console.log("new record entry:", result);
     if (result) {
-      /* const numbers = ["+919924261500", "+919313389830"];
+      const numbers = ["+919924261500", "+919313389830"];
       numbers.forEach((x) => {
         client.calls
           .create({
@@ -63,11 +62,23 @@ const records = async (req, res) => {
           .catch((err) => {
             console.log(err);
           });
-      }); */
-      console.log("new record entry:", result);
+        client.messages
+          .create({
+            body: `${result.number}`,
+            from: "+12565738939",
+            to: x,
+          })
+          .then((msg) => {
+            console.log("caling");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
       return res.sendStatus(200);
     } else return res.sendStatus(400);
-  } else return res.sendStatus(400);
+  } else if (lastEntry.iPOint === iPOint) return res.sendStatus(400);
+  else return res.sendStatus(400);
 };
 
 module.exports = { moneyPost, moneyGet, records };

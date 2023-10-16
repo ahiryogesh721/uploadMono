@@ -1,8 +1,6 @@
-const allowedOrigins = ["http://localhost:3000","https://1x-bet.in/en"];
-
 const credentials = (req, res, next) => {
   const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
+  if (true) {
     res.header("Access-Control-Allow-Credentials", true);
   }
   next();

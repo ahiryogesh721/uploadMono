@@ -33,10 +33,6 @@ export default function BarC() {
     ],
   };
 
-  socket.on("connect", () => {
-    console.log("Connected to the server");
-  });
-
   socket.on("error", (error) => {
     console.error("Connection error:", error);
   });
@@ -78,7 +74,17 @@ export default function BarC() {
     <>
       <h1 className="flex justify-center">bar chart</h1>
       {err?.message === undefined ? (
-        <Bar data={data} options={{}} />
+        <Bar
+          data={data}
+          options={{
+            responsive: true,
+            scales: {
+              x: {
+                display: false,
+              },
+            },
+          }}
+        />
       ) : (
         <h1 className="flex justify-center">{err?.message}</h1>
       )}

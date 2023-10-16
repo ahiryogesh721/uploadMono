@@ -11,9 +11,8 @@ const moneySchema = new Schema({
 });
 
 const recordsSchema = new Schema({
-  iPOint: Number,
-  iPointSBuger: Number,
-  iPointEBuger: Number,
+  number: Schema.Types.Mixed,
+  iPOint: Schema.Types.Mixed,
 });
 
 const moneyModel = model("money", moneySchema);
