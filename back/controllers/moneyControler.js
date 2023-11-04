@@ -14,6 +14,11 @@ const moneyPost = async (req, res) => {
     X !== lastEntry?.X
   ) {
     let inout = parseFloat(playersGets - playersBets).toFixed(2);
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    const seconds = now.getSeconds().toString().padStart(2, "0");
+    const timestamp = `${hours}:${minutes}:${seconds}`;
     const result = await moneyModel.create({
       I: lastEntry === null ? 1 : lastEntry.I + 1,
       X,
@@ -25,30 +30,40 @@ const moneyPost = async (req, res) => {
         lastEntry === null
           ? parseInt(inout)
           : parseInt(lastEntry?.buger) + parseInt(inout),
+      time: timestamp,
     });
     if (result) {
       io.emit("banger", result);
+      console.log(result);
     }
   }
   res.sendStatus(200);
 };
 
 const moneyGet = async (req, res) => {
-  const allData = await moneyModel.find().exec();
+  let allData = await moneyModel.find().exec();
+  if (allData.length >= 550) {
+    allData = allData.slice(allData.length - 550, allData.length);
+  }
+  res.json(allData);
+};
+
+const recordsGet = async (req, res) => {
+  let allData = await recordsModel.findOne().exec();
   res.json(allData);
 };
 
 const records = async (req, res) => {
-  const { iPOint, number } = req.body;
+  const { iPOint, number, time } = req.body;
   const lastEntry = await recordsModel.findOne().sort({ _id: -1 }).exec();
-  if (iPOint > lastEntry?.iPOint + 10 || lastEntry === null) {
+  if (iPOint >= lastEntry?.iPOint + 30 || lastEntry === null) {
     const result = await recordsModel.create({
       number,
       iPOint,
     });
     console.log("new record entry:", result);
     if (result) {
-      const numbers = ["+919924261500", "+919313389830"];
+      const numbers = ["+919924261500" /* "+919313389830" */];
       numbers.forEach((x) => {
         client.calls
           .create({
@@ -64,12 +79,12 @@ const records = async (req, res) => {
           });
         client.messages
           .create({
-            body: `${result.number}`,
+            body: `${time}:${number}`,
             from: "+12565738939",
             to: x,
           })
           .then((msg) => {
-            console.log("caling");
+            console.log("sending msg");
           })
           .catch((err) => {
             console.log(err);
@@ -77,8 +92,7 @@ const records = async (req, res) => {
       });
       return res.sendStatus(200);
     } else return res.sendStatus(400);
-  } else if (lastEntry.iPOint === iPOint) return res.sendStatus(400);
-  else return res.sendStatus(400);
+  } else return res.sendStatus(400);
 };
 
-module.exports = { moneyPost, moneyGet, records };
+module.exports = { moneyPost, moneyGet, records, recordsGet };

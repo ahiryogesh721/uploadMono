@@ -8,6 +8,7 @@ const moneySchema = new Schema({
   playersGets: Schema.Types.Mixed,
   inout: Schema.Types.Mixed,
   buger: Schema.Types.Mixed,
+  time: Schema.Types.Mixed,
 });
 
 const recordsSchema = new Schema({

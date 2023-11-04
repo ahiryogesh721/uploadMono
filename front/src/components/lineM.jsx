@@ -15,17 +15,19 @@ Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
 const socket = io("http://localhost:3100");
 export default function LineM() {
   const [chartArr, setChartArr] = useState([]);
+  const [show, setShow] = useState([]);
+
   const [err, setErr] = useState({});
 
   const data = {
-    labels: chartArr.map((x) => x.I),
+    labels: show.map((x) => x.I),
     datasets: [
       {
-        label: "M",
-        data: chartArr.map((x) => x.buger),
-        backgroundColor: "red",
-        borderColor: "aqua",
-        pointBorderColor: "white",
+        label: "",
+        data: show.map((x) => x.buger),
+        backgroundColor: "white",
+        borderColor: "red",
+        pointBorderColor: "red",
         fill: true,
         tension: 0.1,
       },
@@ -39,126 +41,80 @@ export default function LineM() {
   socket.off("banger");
   socket.once("banger", (data) => {
     setChartArr((pre) => [...pre, data]);
+    setShow((pre) => [...pre, data]);
   });
 
   const getData = () => {
-    new Promise((resolve, reject) => {
+    new Promise(() => {
       axios
         .get("/post")
         .then((res) => {
-          resolve(setChartArr(res.data));
+          setChartArr(res.data);
+          setShow(res.data);
         })
         .catch((err) => {
-          reject(setErr(err));
+          setErr(err);
         });
     });
   };
 
-  const sendTdata = (data) => {
-    new Promise(() => {
-      axios
-        .post("/post/records", data)
-        .then((res) => {
-          return;
-        })
-        .catch((err) => {
-          return;
-        });
-    });
+  const sendTdata = async (data) => {
+    try {
+      console.log("data:", data);
+      await axios.post("/post/records", data);
+    } catch (error) {}
   };
 
-  const seterr = () => {
-    if (chartArr.length >= 100) {
-      let setArr = chartArr.slice(chartArr.length - 100, chartArr.length);
+  const loop = () => {
+    let ar30 = chartArr
+      .slice(chartArr.length - 30, chartArr.length)
+      .map((x) => (x = { ...x, X: +x.X.split("x")[0] }))
+      .reduceRight(
+        (c, cc) => {
+          c.i++;
+          if (2.85 < cc.X) {
+            if (9 <= cc.X) c.val = c.val + 0.8;
+            else if (5 <= cc.X) c.val = c.val + 0.6;
+            else if (2.85 < cc.X) c.val = c.val + 0.3;
+          }
+          return { ...c, val: Number(c.val.toFixed(2)) };
+        },
+        { val: 0, i: 0 }
+      );
+    console.log(ar30.val);
+    if (ar30.val <= 3 && ar30.i >= 30) {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, "0");
+      const minutes = now.getMinutes().toString().padStart(2, "0");
+      const seconds = now.getSeconds().toString().padStart(2, "0");
+      const timestamp = `${hours}:${minutes}:${seconds}`;
+      const data = {
+        iPOint: chartArr[chartArr.length - 30]?.I,
+        number: ar30.val,
+        time: timestamp,
+      };
+      sendTdata(data);
+    } else console.log("serching");
+  };
+
+  const cheker = () => {
+    loop();
+  };
+
+  const seter = () => {
+    if (show.length >= 100) {
+      let setArr = show.slice(show.length - 100, show.length);
+      setShow(setArr);
+    }
+    if (chartArr.length >= 500) {
+      let setArr = chartArr.slice(chartArr.length - 500, chartArr.length);
       setChartArr(setArr);
     }
   };
 
-  const chek5 = (ar) => {
-    if (ar.length < 30) return false;
-    let setAr = ar.map((x) => {
-      return { ...x, X: x.X.split("x")[0] };
-    });
-    let count = 0;
-    for (let i = 0; i < setAr.length; i++) {
-      if (setAr[i]?.X >= 5) {
-        count++;
-        if (count > 1) {
-          return false;
-        }
-      }
-    }
-    return count === 1 || count === 0;
-  };
-
-  const sndMsg = () => {
-    let obj1 = chartArr[chartArr.length - 1]?.buger;
-    let obj2 = chartArr[chartArr.length - 2]?.buger;
-    if (obj1 < obj2) {
-      let obj3 = chartArr[chartArr.length - 3]?.buger;
-      if (obj2 < obj3) {
-        let obj4 = chartArr[chartArr.length - 4]?.buger;
-        if (obj3 < obj4) {
-          let obj5 = chartArr[chartArr.length - 5]?.buger;
-          if (obj4 < obj5) {
-            let obj6 = chartArr[chartArr.length - 6]?.buger;
-            if (obj5 < obj6) {
-              let obj7 = chartArr[chartArr.length - 7]?.buger;
-              if (obj6 < obj7) {
-                let obj = chartArr[chartArr.length - 1];
-                const data = {
-                  number: "6D",
-                  iPOint: obj?.I,
-                };
-                sendTdata(data);
-              }
-            }
-          }
-        }
-      }
-    }
-  };
-
-  const chek1 = (ar) => {
-    if (ar.length < 10) return false;
-    let setAr = ar.map((x) => {
-      return { ...x, X: x.X.split("x")[0] };
-    });
-    let count = 0;
-    for (let i = 0; i < setAr.length; i++) {
-      if (setAr[i]?.X >= 2) {
-        count++;
-        if (count > 1) {
-          return false;
-        }
-      }
-    }
-    return count === 0;
-  };
-
-  const cheker = () => {
-    let arr5 = chartArr.slice(chartArr.length - 35, chartArr.length);
-    let ar1 = chartArr.slice(chartArr.length - 5, chartArr.length);
-    if (chek5(arr5)) {
-      let obj = chartArr[chartArr.length - 1];
-      const data = {
-        number: 5,
-        iPOint: obj?.I,
-      };
-      sendTdata(data);
-    } else if (chek1(ar1)) {
-      const data = {
-        number: 1,
-        iPOint: obj?.I,
-      };
-      sendTdata(data);
-    }
-    sndMsg();
-  };
-
   useEffect(() => {
-    seterr();
     cheker();
+    seter();
   }, [chartArr.length]);
 
   useEffect(() => {
@@ -167,10 +123,10 @@ export default function LineM() {
 
   return (
     <div>
-      <h1 className="flex justify-center">line chart</h1>
+      <h1>buger</h1>
       {err?.message === undefined ? (
         <Line
-          className=""
+          className="rotate-90 p-6 md:rotate-0"
           data={data}
           options={{
             responsive: true,

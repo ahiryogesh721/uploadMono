@@ -1,3 +1,5 @@
+/* url=https://1x-bet.in/games-frame/games/371?co=71&cu=99&lg=en&wh=55&tzo=5.5 */
+
 let players, playersBets, playersGets, X;
 
 const itrater = () => {

@@ -18,14 +18,15 @@ const socket = io("http://localhost:3100");
 
 export default function BarC() {
   const [chartArr, setChartArr] = useState([]);
+  const [show, setShow] = useState([]);
   const [err, setErr] = useState({});
 
   const data = {
-    labels: chartArr.map((x) => x.I),
+    labels: show.map((x) => x.time),
     datasets: [
       {
-        label: "X",
-        data: chartArr.map((x) => x.X.split("x")[0]),
+        label: "",
+        data: show.map((x) => x.X.split("x")[0]),
         backgroundColor: "aqua",
         borderColor: "black",
         borderWidth: 1,
@@ -40,46 +41,51 @@ export default function BarC() {
   socket.off("banger");
   socket.once("banger", (data) => {
     setChartArr((pre) => [...pre, data]);
+    setShow((pre) => [...pre, data]);
   });
 
   const getData = () => {
-    new Promise(function (resolve, rejected) {
+    new Promise(() => {
       axios
         .get("/post")
         .then((res) => {
-          resolve(setChartArr(res.data));
+          setChartArr(res.data);
+          setShow(res.data);
         })
         .catch((err) => {
-          rejected(setErr(err));
+          setErr(err);
         });
     });
   };
 
-  const seterr = () => {
-    if (chartArr.length >= 100) {
-      let setArr = chartArr.slice(chartArr.length - 100, chartArr.length);
+  const seter = () => {
+    if (show.length >= 100) {
+      let setArr = show.slice(show.length - 100, show.length);
+      setShow(setArr);
+    }
+    if (chartArr.length >= 350) {
+      let setArr = chartArr.slice(chartArr.length - 350, chartArr.length);
       setChartArr(setArr);
     }
   };
 
   useEffect(() => {
-    seterr();
+    seter();
   }, [chartArr.length]);
 
   useEffect(() => {
     getData();
   }, []);
-
   return (
-    <>
-      <h1 className="flex justify-center">bar chart</h1>
+    <div>
       {err?.message === undefined ? (
         <Bar
+          className="rotate-90 p-6 md:rotate-0"
           data={data}
           options={{
             responsive: true,
             scales: {
-              x: {
+              y: {
                 display: false,
               },
             },
@@ -88,6 +94,6 @@ export default function BarC() {
       ) : (
         <h1 className="flex justify-center">{err?.message}</h1>
       )}
-    </>
+    </div>
   );
 }
