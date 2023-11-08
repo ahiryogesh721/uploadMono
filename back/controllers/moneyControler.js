@@ -34,7 +34,6 @@ const moneyPost = async (req, res) => {
     });
     if (result) {
       io.emit("banger", result);
-      console.log(result);
     }
   }
   res.sendStatus(200);
@@ -42,9 +41,9 @@ const moneyPost = async (req, res) => {
 
 const moneyGet = async (req, res) => {
   let allData = await moneyModel.find().exec();
-  if (allData.length >= 550) {
+  /* if (allData.length >= 550) {
     allData = allData.slice(allData.length - 550, allData.length);
-  }
+  } */
   res.json(allData);
 };
 
@@ -60,10 +59,12 @@ const records = async (req, res) => {
     const result = await recordsModel.create({
       number,
       iPOint,
+      time,
     });
     console.log("new record entry:", result);
-    if (result) {
-      const numbers = ["+919924261500" /* "+919313389830" */];
+    return res.sendStatus(200);
+    /* if (result) {
+      const numbers = ["+919924261500"  "+919313389830" ];
       numbers.forEach((x) => {
         client.calls
           .create({
@@ -91,7 +92,7 @@ const records = async (req, res) => {
           });
       });
       return res.sendStatus(200);
-    } else return res.sendStatus(400);
+    } else return res.sendStatus(400); */
   } else return res.sendStatus(400);
 };
 

@@ -14,6 +14,7 @@ const moneySchema = new Schema({
 const recordsSchema = new Schema({
   number: Schema.Types.Mixed,
   iPOint: Schema.Types.Mixed,
+  time: Schema.Types.Mixed,
 });
 
 const moneyModel = model("money", moneySchema);
