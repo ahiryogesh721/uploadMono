@@ -13,7 +13,7 @@ import io from "socket.io-client";
 
 Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
 const socket = io("http://localhost:3100");
-export default function LineM({ to, from }) {
+export default function LineM() {
   const [chartArr, setChartArr] = useState([]);
   const [show, setShow] = useState([]);
   const [err, setErr] = useState({});
