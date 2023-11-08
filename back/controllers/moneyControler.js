@@ -41,9 +41,9 @@ const moneyPost = async (req, res) => {
 
 const moneyGet = async (req, res) => {
   let allData = await moneyModel.find().exec();
-  /* if (allData.length >= 550) {
+  if (allData.length >= 550) {
     allData = allData.slice(allData.length - 550, allData.length);
-  } */
+  }
   res.json(allData);
 };
 

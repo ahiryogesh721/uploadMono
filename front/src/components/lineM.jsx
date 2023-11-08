@@ -19,13 +19,13 @@ export default function LineM({ to, from }) {
   const [err, setErr] = useState({});
 
   const data = {
-    //labels: show.map((x) => x.I),
-    labels: show.slice(to, from).map((x) => x.I),
+    labels: show.map((x) => x.I),
+    //labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "",
-        //data: show.map((x) => x.buger),
-        data: show.slice(to, from).map((x) => x.buger),
+        data: show.map((x) => x.buger),
+        //data: show.slice(to, from).map((x) => x.buger),
         backgroundColor: "black",
         borderColor: "red",
         pointBorderColor: "black",
@@ -99,6 +99,7 @@ export default function LineM({ to, from }) {
       },
       { val: 0, i: 0 }
     );
+    console.log(val.val);
     if (val.val <= 3 && val.i >= 30) {
       let SAM = ar30.slice(0, 25);
       const SAMVAL = SAM.reduceRight(
@@ -149,7 +150,7 @@ export default function LineM({ to, from }) {
 
   useEffect(() => {
     cheker();
-    //seter();
+    seter();
   }, [chartArr.length]);
 
   useEffect(() => {
