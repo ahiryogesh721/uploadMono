@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const { Server, Socket } = require("socket.io");
+const { Server } = require("socket.io");
 
 const PORT = 3100;
 
@@ -17,11 +17,6 @@ const io = new Server(appL, {
     ],
     methods: ["GET", "POST"],
   },
-});
-io.on("connection", (socket) => {
-  socket.once("msg", (data) => {
-    console.log(data);
-  });
 });
 
 module.exports = io;

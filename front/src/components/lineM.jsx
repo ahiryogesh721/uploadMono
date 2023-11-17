@@ -13,7 +13,7 @@ import io from "socket.io-client";
 
 Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
 const socket = io("http://localhost:3100");
-export default function LineM() {
+export default function LineM({ to, from }) {
   const [chartArr, setChartArr] = useState([]);
   const [show, setShow] = useState([]);
   const [err, setErr] = useState({});
@@ -28,7 +28,7 @@ export default function LineM() {
         //data: show.slice(to, from).map((x) => x.buger),
         backgroundColor: "black",
         borderColor: "red",
-        pointBorderColor: "black",
+        pointBorderColor: "blue",
         fill: true,
         tension: 0.1,
       },
@@ -65,55 +65,25 @@ export default function LineM() {
     } catch (error) {}
   };
 
-  const S3 = () => {
-    let token = localStorage.getItem("token");
-    if (token === null) return;
-    token = JSON.parse(token);
-    const now = new Date();
-    if (now.getTime() > token.exp) localStorage.removeItem("token");
-    let l1 = +chartArr[chartArr.length - 1]?.X.split("x")[0];
-    let l2 = +chartArr[chartArr.length - 2]?.X.split("x")[0];
-    let l3 = +chartArr[chartArr.length - 3]?.X.split("x")[0];
-    if (l1 < 3 && l2 < 3 && l3 < 3) {
-      const hours = now.getHours().toString().padStart(2, "0");
-      const minutes = now.getMinutes().toString().padStart(2, "0");
-      const seconds = now.getSeconds().toString().padStart(2, "0");
-      const timestamp = `${hours}:${minutes}:${seconds}`;
-      socket.emit("msg", timestamp);
-    }
-  };
-
   const loop = () => {
     let ar30 = chartArr.slice(chartArr.length - 30, chartArr.length);
-    ar30 = ar30;
     ar30 = ar30.map((x) => (x = { ...x, X: +x.X.split("x")[0] }));
-    const val = ar30.reduceRight(
+
+    const val2 = ar30.reduceRight(
       (c, cc) => {
         c.i++;
         if (2.85 < cc.X) {
           if (9 <= cc.X) c.val = c.val + 0.8;
-          else if (5 <= cc.X) c.val = c.val + 0.6;
+          else if (6 <= cc.X) c.val = c.val + 0.6;
           else if (2.85 < cc.X) c.val = c.val + 0.3;
         }
         return { ...c, val: Number(c.val.toFixed(2)) };
       },
       { val: 0, i: 0 }
     );
-    console.log(val.val);
-    if (val.val <= 3 && val.i >= 30) {
-      let SAM = ar30.slice(0, 25);
-      const SAMVAL = SAM.reduceRight(
-        (c, cc) => {
-          c.i++;
-          if (2.85 < cc.X) {
-            if (9 <= cc.X) c.val = c.val + 0.8;
-            else if (5 <= cc.X) c.val = c.val + 0.6;
-            else if (2.85 < cc.X) c.val = c.val + 0.3;
-          }
-          return { ...c, val: Number(c.val.toFixed(2)) };
-        },
-        { val: 0, i: 0 }
-      );
+    console.log("30:", val2.val);
+
+    if (val2.val <= 2 && val2.i >= 30) {
       const now = new Date();
       const hours = now.getHours().toString().padStart(2, "0");
       const minutes = now.getMinutes().toString().padStart(2, "0");
@@ -121,20 +91,39 @@ export default function LineM() {
       const timestamp = `${hours}:${minutes}:${seconds}`;
       const data = {
         iPOint: chartArr[chartArr.length - 1]?.I,
-        number: `25:${SAMVAL.val} 30:${val.val}`,
+        number: `3:${val2.val}`,
         time: timestamp,
       };
       sendTdata(data);
-      /* const item = {
-        exp: now.getTime() + 30 * 60 * 1000,
+    }
+  };
+
+  const R30 = () => {
+    let ar = chartArr.slice(chartArr.length - 30, chartArr.length);
+    ar = ar.map((x) => +x.X.split("x")[0]);
+    const result = ar.filter((x) => x >= 10);
+    console.log(result);
+    if (result.length === 0 && chartArr.length >= 100) {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, "0");
+      const minutes = now.getMinutes().toString().padStart(2, "0");
+      const seconds = now.getSeconds().toString().padStart(2, "0");
+      const timestamp = `${hours}:${minutes}:${seconds}`;
+      const data = {
+        iPOint: chartArr[chartArr.length - 1]?.I,
+        number: "🎇",
+        time: timestamp,
       };
-      localStorage.setItem("token", JSON.stringify(item)); */
+      sendTdata(data);
+      let token = localStorage.getItem("token");
+      token = JSON.parse(token);
+      token.val = true;
+      localStorage.setItem("token", JSON.stringify(token));
     }
   };
 
   const cheker = () => {
     loop();
-    S3();
   };
 
   const seter = () => {

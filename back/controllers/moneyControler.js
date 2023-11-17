@@ -1,7 +1,7 @@
 const { moneyModel, recordsModel } = require("../models/moneyModel");
 const io = require("../server1");
-const accountSid = "ACd6c3da2efc055e353964611712010649";
-const authToken = "f91cdcfe75a670861454b2eb993b4bee";
+const accountSid = "ACce54b91085644f3ae5dc954cf1f73ffd";
+const authToken = "3440550b5d54022a3cd7ba93f0c435ed";
 const client = require("twilio")(accountSid, authToken);
 
 const moneyPost = async (req, res) => {
@@ -32,6 +32,7 @@ const moneyPost = async (req, res) => {
           : parseInt(lastEntry?.buger) + parseInt(inout),
       time: timestamp,
     });
+    console.log(result);
     if (result) {
       io.emit("banger", result);
     }
@@ -39,37 +40,43 @@ const moneyPost = async (req, res) => {
   res.sendStatus(200);
 };
 
+const moneyDellet = async (req, res) => {
+  const id = req.params.id;
+  await moneyModel.deleteOne({ _id: id });
+  let allData = await moneyModel.find().exec();
+  res.json(allData);
+};
+
 const moneyGet = async (req, res) => {
   let allData = await moneyModel.find().exec();
-  if (allData.length >= 550) {
-    allData = allData.slice(allData.length - 550, allData.length);
+  if (allData.length >= 500) {
+    allData = allData.slice(allData.length - 500, allData.length);
   }
   res.json(allData);
 };
 
 const recordsGet = async (req, res) => {
-  let allData = await recordsModel.findOne().exec();
+  let allData = await recordsModel.find().exec();
   res.json(allData);
 };
 
 const records = async (req, res) => {
   const { iPOint, number, time } = req.body;
   const lastEntry = await recordsModel.findOne().sort({ _id: -1 }).exec();
-  if (iPOint >= lastEntry?.iPOint + 30 || lastEntry === null) {
+  if (iPOint > lastEntry?.iPOint + 20 || lastEntry === null) {
     const result = await recordsModel.create({
       number,
       iPOint,
       time,
     });
     console.log("new record entry:", result);
-    return res.sendStatus(200);
-    /* if (result) {
-      const numbers = ["+919924261500"  "+919313389830" ];
+    if (result) {
+      const numbers = ["+919924261500", "+919313389830"];
       numbers.forEach((x) => {
         client.calls
           .create({
-            url: "https://handler.twilio.com/twiml/EH272f0f7bfe617ee912d51fefaa460dd9",
-            from: "+12565738939",
+            url: "https://handler.twilio.com/twiml/EHcdbde4ac5d9e6b2da20eef269c9a273f",
+            from: "+13344630937",
             to: x,
           })
           .then((msg) => {
@@ -78,10 +85,11 @@ const records = async (req, res) => {
           .catch((err) => {
             console.log(err);
           });
+
         client.messages
           .create({
-            body: `${time}:${number}`,
-            from: "+12565738939",
+            body: `🎱:${number}`,
+            from: "+13344630937",
             to: x,
           })
           .then((msg) => {
@@ -92,8 +100,8 @@ const records = async (req, res) => {
           });
       });
       return res.sendStatus(200);
-    } else return res.sendStatus(400); */
+    } else return res.sendStatus(400);
   } else return res.sendStatus(400);
 };
 
-module.exports = { moneyPost, moneyGet, records, recordsGet };
+module.exports = { moneyPost, moneyGet, records, recordsGet, moneyDellet };
