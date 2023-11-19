@@ -18,5 +18,4 @@ const io = new Server(appL, {
     methods: ["GET", "POST"],
   },
 });
-
 module.exports = io;

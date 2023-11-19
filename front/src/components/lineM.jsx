@@ -66,7 +66,16 @@ export default function LineM({ to, from }) {
   };
 
   const loop = () => {
-    let ar30 = chartArr.slice(chartArr.length - 30, chartArr.length);
+    const fun = (arr) => {
+      return arr.filter((item, index) => {
+        return (
+          index === arr.length - 1 ||
+          JSON.stringify(item) !== JSON.stringify(arr[index + 1])
+        );
+      });
+    };
+    let newArr = fun(chartArr);
+    let ar30 = newArr.slice(chartArr.length - 30, chartArr.length);
     ar30 = ar30.map((x) => (x = { ...x, X: +x.X.split("x")[0] }));
 
     const val2 = ar30.reduceRight(
@@ -81,9 +90,7 @@ export default function LineM({ to, from }) {
       },
       { val: 0, i: 0 }
     );
-    console.log("30:", val2.val);
-
-    if (val2.val <= 2 && val2.i >= 30) {
+    if (val2.val <= 3.2 && val2.i >= 30) {
       const now = new Date();
       const hours = now.getHours().toString().padStart(2, "0");
       const minutes = now.getMinutes().toString().padStart(2, "0");

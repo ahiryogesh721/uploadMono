@@ -72,7 +72,7 @@ export default function BarC({ to, from }) {
   };
 
   useEffect(() => {
-    seter();
+    //seter();
   }, [chartArr.length]);
 
   useEffect(() => {

@@ -9,6 +9,7 @@ const moneySchema = new Schema({
   inout: Schema.Types.Mixed,
   buger: Schema.Types.Mixed,
   time: Schema.Types.Mixed,
+  ST: Schema.Types.Mixed,
 });
 
 const recordsSchema = new Schema({
