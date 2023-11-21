@@ -46,18 +46,14 @@ export default function BarC({ to, from }) {
     setShow((pre) => [...pre, data]);
   });
 
-  const getData = () => {
-    new Promise(() => {
-      axios
-        .get("/post")
-        .then((res) => {
-          setChartArr(res.data);
-          setShow(res.data);
-        })
-        .catch((err) => {
-          setErr(err);
-        });
-    });
+  const getData = async () => {
+    try {
+      const res = await axios.get("/post");
+      setChartArr(res.data);
+      setShow(res.data);
+    } catch (error) {
+      setErr(error);
+    }
   };
 
   const seter = () => {
@@ -72,7 +68,7 @@ export default function BarC({ to, from }) {
   };
 
   useEffect(() => {
-    //seter();
+    seter();
   }, [chartArr.length]);
 
   useEffect(() => {
@@ -94,7 +90,21 @@ export default function BarC({ to, from }) {
           }}
         />
       ) : (
-        <h1 className="flex justify-center">{err?.message}</h1>
+        <div className="flex justify-center">
+          <h1> {err?.message}</h1>
+          <Bar
+            className="rotate-90 p-6 md:rotate-0"
+            data={data}
+            options={{
+              responsive: true,
+              scales: {
+                y: {
+                  display: false,
+                },
+              },
+            }}
+          />
+        </div>
       )}
     </div>
   );

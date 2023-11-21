@@ -10,12 +10,9 @@ const appL = app.listen(PORT, () => {
 
 const io = new Server(appL, {
   cors: {
-    origin: [
-      "http://localhost:3500",
-      "http://localhost:3000",
-      "http://localhost:3400",
-    ],
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
+
 module.exports = io;

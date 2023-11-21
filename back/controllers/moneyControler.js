@@ -1,11 +1,10 @@
 const { moneyModel, recordsModel } = require("../models/moneyModel");
 const io = require("../server1");
 const accountSid = "ACce54b91085644f3ae5dc954cf1f73ffd";
-const authToken = "1263da13311ddc29d625f9a2cae10aeb";
+const authToken = "16e3e567d1c5cd3329ee42a010b65c1b";
 const client = require("twilio")(accountSid, authToken);
 
 const moneyPost = async (req, res) => {
-  const allentry = await moneyModel.find().exec();
   const lastEntry = await moneyModel.findOne().sort({ _id: -1 }).exec();
   const { players, playersBets, playersGets, X } = req.body;
   if (
@@ -15,52 +14,34 @@ const moneyPost = async (req, res) => {
     X !== lastEntry?.X
   ) {
     let inout = parseFloat(playersGets - playersBets).toFixed(2);
-
-    let SET;
-    const loop = () => {
-      let ar30 = allentry.slice(allentry.length - 30, allentry.length);
-      ar30 = ar30.map((x) => (x = { ...x, X: +x.X.split("x")[0] }));
-      const val2 = ar30.reduceRight(
-        (c, cc) => {
-          c.i++;
-          if (2.85 < cc.X) {
-            if (9 <= cc.X) c.val = c.val + 0.8;
-            else if (6 <= cc.X) c.val = c.val + 0.6;
-            else if (2.85 < cc.X) c.val = c.val + 0.3;
-          }
-          return { ...c, val: Number(c.val.toFixed(2)) };
-        },
-        { val: 0, i: 0 }
-      );
-      SET = val2.val;
-
-      console.log(ar30, val2.val);
-    };
-
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, "0");
     const minutes = now.getMinutes().toString().padStart(2, "0");
     const seconds = now.getSeconds().toString().padStart(2, "0");
     const timestamp = `${hours}:${minutes}:${seconds}`;
-    const result = await moneyModel.create({
-      I: lastEntry === null ? 1 : lastEntry.I + 1,
-      X,
-      players,
-      playersBets,
-      playersGets,
-      inout: parseInt(inout),
-      time: timestamp,
-      //ST: SET,
-      buger:
-        lastEntry === null
-          ? parseInt(inout)
-          : parseInt(lastEntry?.buger) + parseInt(inout),
-    });
-    if (result) {
-      io.emit("banger", result);
+    try {
+      const result = await moneyModel.create({
+        I: lastEntry === null ? 1 : lastEntry.I + 1,
+        X,
+        players,
+        playersBets,
+        playersGets,
+        inout: parseInt(inout),
+        time: timestamp,
+        buger:
+          lastEntry === null
+            ? parseInt(inout)
+            : parseInt(lastEntry?.buger) + parseInt(inout),
+      });
+      if (result) {
+        io.emit("banger", result);
+        console.log(result);
+      }
+      res.sendStatus(200);
+    } catch (error) {
+      console.log("couldnt save");
     }
-  }
-  res.sendStatus(200);
+  } else res.sendStatus(200);
 };
 
 const moneyDellet = async (req, res) => {

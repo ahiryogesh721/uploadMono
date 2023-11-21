@@ -45,18 +45,14 @@ export default function LineM({ to, from }) {
     setShow((pre) => [...pre, data]);
   });
 
-  const getData = () => {
-    new Promise(() => {
-      axios
-        .get("/post")
-        .then((res) => {
-          setChartArr(res.data);
-          setShow(res.data);
-        })
-        .catch((err) => {
-          setErr(err);
-        });
-    });
+  const getData = async () => {
+    try {
+      const res = await axios.get("/post");
+      setChartArr(res.data);
+      setShow(res.data);
+    } catch (error) {
+      setErr(error);
+    }
   };
 
   const sendTdata = async (data) => {
@@ -66,18 +62,8 @@ export default function LineM({ to, from }) {
   };
 
   const loop = () => {
-    const fun = (arr) => {
-      return arr.filter((item, index) => {
-        return (
-          index === arr.length - 1 ||
-          JSON.stringify(item) !== JSON.stringify(arr[index + 1])
-        );
-      });
-    };
-    let newArr = fun(chartArr);
-    let ar30 = newArr.slice(chartArr.length - 30, chartArr.length);
+    let ar30 = chartArr.slice(chartArr.length - 30, chartArr.length);
     ar30 = ar30.map((x) => (x = { ...x, X: +x.X.split("x")[0] }));
-
     const val2 = ar30.reduceRight(
       (c, cc) => {
         c.i++;
@@ -90,6 +76,7 @@ export default function LineM({ to, from }) {
       },
       { val: 0, i: 0 }
     );
+    console.log(val2.val);
     if (val2.val <= 3.2 && val2.i >= 30) {
       const now = new Date();
       const hours = now.getHours().toString().padStart(2, "0");
@@ -102,34 +89,51 @@ export default function LineM({ to, from }) {
         time: timestamp,
       };
       sendTdata(data);
+      /* let token = localStorage.getItem("token");
+      token = JSON.parse(token);
+      token.val9 = true;
+      token.valL = false;
+      localStorage.setItem("token", JSON.stringify(token)); */
     }
   };
 
-  const R30 = () => {
-    let ar = chartArr.slice(chartArr.length - 30, chartArr.length);
+  const c9 = () => {
+    console.log("caling c9");
+    let ar = chartArr.slice(chartArr.length - 9, chartArr.length);
     ar = ar.map((x) => +x.X.split("x")[0]);
-    const result = ar.filter((x) => x >= 10);
-    console.log(result);
-    if (result.length === 0 && chartArr.length >= 100) {
-      const now = new Date();
-      const hours = now.getHours().toString().padStart(2, "0");
-      const minutes = now.getMinutes().toString().padStart(2, "0");
-      const seconds = now.getSeconds().toString().padStart(2, "0");
-      const timestamp = `${hours}:${minutes}:${seconds}`;
-      const data = {
-        iPOint: chartArr[chartArr.length - 1]?.I,
-        number: "🎇",
-        time: timestamp,
-      };
-      sendTdata(data);
+    const val = ar.filter((x) => x >= 5);
+    if (val.length === 0) {
       let token = localStorage.getItem("token");
       token = JSON.parse(token);
-      token.val = true;
+      token.valC = true;
+      token.val9 = false;
+      localStorage.setItem("token", JSON.stringify(token));
+    }
+  };
+
+  const cancel = () => {
+    console.log("caling cancel");
+    let lastX = +chartArr[chartArr.length - 1]?.X.split("x")[0];
+    if (lastX >= 5) {
+      let token = localStorage.getItem("token");
+      token = JSON.parse(token);
+      token.valL = true;
+      token.valC = false;
       localStorage.setItem("token", JSON.stringify(token));
     }
   };
 
   const cheker = () => {
+    /* let token = localStorage.getItem("token");
+    token = JSON.parse(token);
+    if (token?.valC) {
+      cancel();
+    }
+    if (token?.val9) {
+      c9();
+    }
+    if (token?.valL) {
+    } */
     loop();
   };
 
@@ -173,7 +177,24 @@ export default function LineM({ to, from }) {
           }}
         />
       ) : (
-        <h1 className="flex justify-center">{err?.message}</h1>
+        <div className="flex justify-center">
+          <h1> {err?.message}</h1>
+          <Line
+            className="rotate-90 p-6 md:rotate-0"
+            data={data}
+            options={{
+              responsive: true,
+              scales: {
+                y: {
+                  display: false,
+                },
+                x: {
+                  display: false,
+                },
+              },
+            }}
+          />
+        </div>
       )}
     </div>
   );
