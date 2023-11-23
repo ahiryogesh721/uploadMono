@@ -3,6 +3,7 @@ require("dotenv").config();
 import React from "react";
 import BarC from "@/components/barX";
 import LineM from "@/components/lineM";
+import L1 from "@/components/L1";
 
 export default function Home() {
   return (
@@ -15,6 +16,12 @@ export default function Home() {
         className="absolute left-24 md:left-0 md:relative md:rotate-0 md:mt-0"
       >
         <LineM />
+      </div>
+      <div
+        id="lineM"
+        className="absolute left-24 md:left-0 md:relative md:rotate-0 md:mt-0"
+      >
+        <L1 />
       </div>
     </div>
   );

@@ -1,22 +1,19 @@
 "use client";
+import React, { useEffect, useState } from "react";
+import { Line } from "react-chartjs-2";
 import axios from "@/api/axios";
 import {
   Chart,
-  BarElement,
+  LineElement,
   CategoryScale,
   LinearScale,
-  Tooltip,
-  Legend,
+  PointElement,
 } from "chart.js";
-import { useEffect, useState } from "react";
-import { Bar } from "react-chartjs-2";
 import io from "socket.io-client";
 
-Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
-
+Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
 const socket = io("http://localhost:3100");
-
-export default function BarC({ to, from }) {
+export default function L1({ to, from }) {
   const [chartArr, setChartArr] = useState([]);
   const [show, setShow] = useState([]);
   const [err, setErr] = useState({});
@@ -27,27 +24,16 @@ export default function BarC({ to, from }) {
     datasets: [
       {
         label: "",
-        data: show.map((x) => x.X.split("x")[0]),
-        //data: show.slice(to, from).map((x) => x.X.split("x")[0]),
-        backgroundColor: "aqua",
-        borderColor: "black",
-        borderWidth: 1,
+        data: show.map((x) => x.ST),
+        //data: show.slice(to, from).map((x) => x.ST),
+        backgroundColor: "black",
+        borderColor: "blue",
+        pointBorderColor: "blue",
+        fill: true,
+        tension: 0.1,
       },
     ],
   };
-
-  function changer(data) {
-    const uniqueIds = new Set();
-    return data.filter((entry) => {
-      if (uniqueIds.has(entry.I)) {
-        return false;
-      }
-
-      uniqueIds.add(entry.I);
-
-      return true;
-    });
-  }
 
   socket.on("error", (error) => {
     console.error("Connection error:", error);
@@ -55,15 +41,15 @@ export default function BarC({ to, from }) {
 
   socket.off("banger");
   socket.once("banger", (data) => {
-    setChartArr((pre) => changer([...pre, data]));
-    setShow((pre) => changer([...pre, data]));
+    setChartArr((pre) => [...pre, data]);
+    setShow((pre) => [...pre, data]);
   });
 
   const getData = async () => {
     try {
       const res = await axios.get("/post");
-      setChartArr(changer(res.data));
-      setShow(changer(res.data));
+      setChartArr(res.data);
+      setShow(res.data);
     } catch (error) {
       setErr(error);
     }
@@ -73,31 +59,35 @@ export default function BarC({ to, from }) {
     if (show.length >= 100) {
       let setArr = show.slice(show.length - 100, show.length);
       setShow(setArr);
-    }
-    if (chartArr.length >= 350) {
-      let setArr = chartArr.slice(chartArr.length - 350, chartArr.length);
+    } else if (chartArr.length >= 500) {
+      let setArr = chartArr.slice(chartArr.length - 500, chartArr.length);
       setChartArr(setArr);
     }
   };
 
   useEffect(() => {
-    //seter();
+    seter();
   }, [chartArr.length]);
 
   useEffect(() => {
     getData();
   }, []);
+
   return (
     <div>
+      <h1>buger</h1>
       {err?.message === undefined ? (
-        <Bar
+        <Line
           className="rotate-90 p-6 md:rotate-0"
           data={data}
           options={{
             responsive: true,
             scales: {
               y: {
-                display: false,
+                display: true,
+              },
+              x: {
+                display: true,
               },
             },
           }}
@@ -105,14 +95,17 @@ export default function BarC({ to, from }) {
       ) : (
         <div className="flex justify-center">
           <h1> {err?.message}</h1>
-          <Bar
+          <Line
             className="rotate-90 p-6 md:rotate-0"
             data={data}
             options={{
               responsive: true,
               scales: {
                 y: {
-                  display: false,
+                  display: true,
+                },
+                x: {
+                  display: true,
                 },
               },
             }}

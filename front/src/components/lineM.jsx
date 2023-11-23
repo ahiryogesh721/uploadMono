@@ -13,7 +13,7 @@ import io from "socket.io-client";
 
 Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
 const socket = io("http://localhost:3100");
-export default function LineM({ to, from }) {
+export default function LineM({ to, from, c1, c2 }) {
   const [chartArr, setChartArr] = useState([]);
   const [show, setShow] = useState([]);
   const [err, setErr] = useState({});
@@ -35,21 +35,34 @@ export default function LineM({ to, from }) {
     ],
   };
 
+  function changer(data) {
+    const uniqueIds = new Set();
+    return data.filter((entry) => {
+      if (uniqueIds.has(entry.I)) {
+        return false;
+      }
+
+      uniqueIds.add(entry.I);
+
+      return true;
+    });
+  }
+
   socket.on("error", (error) => {
     console.error("Connection error:", error);
   });
 
   socket.off("banger");
   socket.once("banger", (data) => {
-    setChartArr((pre) => [...pre, data]);
-    setShow((pre) => [...pre, data]);
+    setChartArr((pre) => changer([...pre, data]));
+    setShow((pre) => changer([...pre, data]));
   });
 
   const getData = async () => {
     try {
       const res = await axios.get("/post");
-      setChartArr(res.data);
-      setShow(res.data);
+      setChartArr(changer(res.data));
+      setShow(changer(res.data));
     } catch (error) {
       setErr(error);
     }
@@ -62,7 +75,70 @@ export default function LineM({ to, from }) {
   };
 
   const loop = () => {
-    let ar30 = chartArr.slice(chartArr.length - 30, chartArr.length);
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    const seconds = now.getSeconds().toString().padStart(2, "0");
+    const timestamp = `${hours}:${minutes}:${seconds}`;
+    let ar30 = chartArr.map((x) => (x = { ...x, X: +x.X.split("x")[0] }));
+    let val = ar30.reduceRight(
+      (c, cc) => {
+        c.i++;
+        if (2.85 < cc.X) {
+          if (9 <= cc.X) c.val = c.val + 0.8;
+          else if (6 <= cc.X) c.val = c.val + 0.6;
+          else if (2.85 < cc.X) c.val = c.val + 0.3;
+        }
+
+        if (30 === c.i) {
+          console.log("30", c);
+        } else if (50 === c.i) {
+          console.log("50", c);
+        } else if (75 === c.i) {
+          console.log("75", c);
+        } else if (150 === c.i) {
+          console.log("150", c);
+        }
+
+        if (30 <= c.i && c.i <= 35 && c.val <= 2.9) {
+          const data = {
+            iPOint: chartArr[chartArr.length - 1]?.I,
+            number: `${c.i}:${c.val}`,
+            time: timestamp,
+          };
+          sendTdata(data);
+        } else if (50 <= c.i && c.i <= 55 && c.val <= 3.5) {
+          const data = {
+            iPOint: chartArr[chartArr.length - 1]?.I,
+            number: `${c.i}:${c.val}`,
+            time: timestamp,
+          };
+          sendTdata(data);
+        } else if (70 <= c.i && c.i <= 85 && c.val <= 7.5) {
+          const data = {
+            iPOint: chartArr[chartArr.length - 1]?.I,
+            number: `${c.i}:${c.val}`,
+            time: timestamp,
+          };
+          sendTdata(data);
+        } else if (150 <= c.i && c.i <= 190 && c.val <= 18) {
+          const data = {
+            iPOint: chartArr[chartArr.length - 1]?.I,
+            number: `${c.i}:${c.val}`,
+            time: timestamp,
+          };
+          sendTdata(data);
+        }
+        return { ...c, val: Number(c.val.toFixed(2)) };
+      },
+      { val: 0, i: 0 }
+    );
+  };
+
+  const bob = () => {
+    let I1 = chartArr.findIndex((x) => x.I === c1),
+      I2 = chartArr.findIndex((x) => x.I === c2);
+    let ar30 = chartArr.slice(I1, I2);
     ar30 = ar30.map((x) => (x = { ...x, X: +x.X.split("x")[0] }));
     const val2 = ar30.reduceRight(
       (c, cc) => {
@@ -76,73 +152,19 @@ export default function LineM({ to, from }) {
       },
       { val: 0, i: 0 }
     );
-    console.log(val2.val);
-    if (val2.val <= 3.2 && val2.i >= 30) {
-      const now = new Date();
-      const hours = now.getHours().toString().padStart(2, "0");
-      const minutes = now.getMinutes().toString().padStart(2, "0");
-      const seconds = now.getSeconds().toString().padStart(2, "0");
-      const timestamp = `${hours}:${minutes}:${seconds}`;
-      const data = {
-        iPOint: chartArr[chartArr.length - 1]?.I,
-        number: `3:${val2.val}`,
-        time: timestamp,
-      };
-      sendTdata(data);
-      /* let token = localStorage.getItem("token");
-      token = JSON.parse(token);
-      token.val9 = true;
-      token.valL = false;
-      localStorage.setItem("token", JSON.stringify(token)); */
-    }
-  };
-
-  const c9 = () => {
-    console.log("caling c9");
-    let ar = chartArr.slice(chartArr.length - 9, chartArr.length);
-    ar = ar.map((x) => +x.X.split("x")[0]);
-    const val = ar.filter((x) => x >= 5);
-    if (val.length === 0) {
-      let token = localStorage.getItem("token");
-      token = JSON.parse(token);
-      token.valC = true;
-      token.val9 = false;
-      localStorage.setItem("token", JSON.stringify(token));
-    }
-  };
-
-  const cancel = () => {
-    console.log("caling cancel");
-    let lastX = +chartArr[chartArr.length - 1]?.X.split("x")[0];
-    if (lastX >= 5) {
-      let token = localStorage.getItem("token");
-      token = JSON.parse(token);
-      token.valL = true;
-      token.valC = false;
-      localStorage.setItem("token", JSON.stringify(token));
-    }
+    console.log(ar30[0]?.I, ar30[ar30.length - 1]?.I, val2);
   };
 
   const cheker = () => {
-    /* let token = localStorage.getItem("token");
-    token = JSON.parse(token);
-    if (token?.valC) {
-      cancel();
-    }
-    if (token?.val9) {
-      c9();
-    }
-    if (token?.valL) {
-    } */
     loop();
+    //bob();
   };
 
   const seter = () => {
     if (show.length >= 100) {
       let setArr = show.slice(show.length - 100, show.length);
       setShow(setArr);
-    }
-    if (chartArr.length >= 500) {
+    } else if (chartArr.length >= 500) {
       let setArr = chartArr.slice(chartArr.length - 500, chartArr.length);
       setChartArr(setArr);
     }
