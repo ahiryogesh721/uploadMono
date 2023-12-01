@@ -4,24 +4,19 @@ import React from "react";
 import BarC from "@/components/barX";
 import LineM from "@/components/lineM";
 import L1 from "@/components/L1";
+import B1 from "@/components/B1";
 
 export default function Home() {
+  let to = 0,
+    from = 4700;
+
   return (
-    <div className="relative m-15 mt-40 md:mt-0  md:relative md:m-15 flex flex-row md:flex-col">
-      <div className="absolute md:h-screen md:relative md:rotate-0 md:mb-0">
-        <BarC />
+    <div className="mt-32 flex flex-row md:mt-0 md:flex-col ">
+      <div>
+        <BarC to={to} from={from} />
       </div>
-      <div
-        id="lineM"
-        className="absolute left-24 md:left-0 md:relative md:rotate-0 md:mt-0"
-      >
-        <LineM />
-      </div>
-      <div
-        id="lineM"
-        className="absolute left-24 md:left-0 md:relative md:rotate-0 md:mt-0"
-      >
-        <L1 />
+      <div id="lineM">
+        <LineM to={to} from={from} />
       </div>
     </div>
   );

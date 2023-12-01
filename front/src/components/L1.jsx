@@ -12,22 +12,22 @@ import {
 import io from "socket.io-client";
 
 Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
-const socket = io("http://localhost:3100");
-export default function L1({ to, from }) {
+const socket = io(process.env.NEXT_PUBLIC_SOCK_URL);
+export default function L1({ to, from, c1, c2 }) {
   const [chartArr, setChartArr] = useState([]);
   const [show, setShow] = useState([]);
   const [err, setErr] = useState({});
 
   const data = {
-    labels: show.map((x) => x.I),
-    //labels: show.slice(to, from).map((x) => x.I),
+    labels: chartArr.map((x) => x.I),
+    //labels: chartArr.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "",
-        data: show.map((x) => x.ST),
-        //data: show.slice(to, from).map((x) => x.ST),
+        data: chartArr.map((x) => x.buger),
+        //data: chartArr.slice(to, from).map((x) => x.buger),
         backgroundColor: "black",
-        borderColor: "blue",
+        borderColor: "red",
         pointBorderColor: "blue",
         fill: true,
         tension: 0.1,
@@ -35,32 +35,46 @@ export default function L1({ to, from }) {
     ],
   };
 
+  function changer(data) {
+    const uniqueIds = new Set();
+    return data.filter((entry) => {
+      if (uniqueIds.has(entry.I)) {
+        return false;
+      }
+
+      uniqueIds.add(entry.I);
+
+      return true;
+    });
+  }
+
   socket.on("error", (error) => {
     console.error("Connection error:", error);
   });
 
   socket.off("banger");
   socket.once("banger", (data) => {
-    setChartArr((pre) => [...pre, data]);
-    setShow((pre) => [...pre, data]);
+    setChartArr((pre) => changer([...pre, data]));
+    setShow((pre) => changer([...pre, data]));
   });
 
   const getData = async () => {
     try {
       const res = await axios.get("/post");
-      setChartArr(res.data);
-      setShow(res.data);
+      setChartArr(changer(res.data));
+      setShow(changer(res.data));
     } catch (error) {
       setErr(error);
     }
   };
 
   const seter = () => {
-    if (show.length >= 100) {
-      let setArr = show.slice(show.length - 100, show.length);
+    if (show.length >= 50) {
+      let setArr = show.slice(show.length - 50, show.length);
       setShow(setArr);
-    } else if (chartArr.length >= 500) {
-      let setArr = chartArr.slice(chartArr.length - 500, chartArr.length);
+    }
+    if (chartArr.length >= 600) {
+      let setArr = chartArr.slice(chartArr.length - 600, chartArr.length);
       setChartArr(setArr);
     }
   };
@@ -75,7 +89,6 @@ export default function L1({ to, from }) {
 
   return (
     <div>
-      <h1>buger</h1>
       {err?.message === undefined ? (
         <Line
           className="rotate-90 p-6 md:rotate-0"
@@ -84,28 +97,27 @@ export default function L1({ to, from }) {
             responsive: true,
             scales: {
               y: {
-                display: true,
+                display: false,
               },
               x: {
-                display: true,
+                display: false,
               },
             },
           }}
         />
       ) : (
-        <div className="flex justify-center">
+        <div>
           <h1> {err?.message}</h1>
           <Line
-            className="rotate-90 p-6 md:rotate-0"
             data={data}
             options={{
               responsive: true,
               scales: {
                 y: {
-                  display: true,
+                  display: false,
                 },
                 x: {
-                  display: true,
+                  display: false,
                 },
               },
             }}

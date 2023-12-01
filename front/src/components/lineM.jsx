@@ -12,7 +12,7 @@ import {
 import io from "socket.io-client";
 
 Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
-const socket = io("http://localhost:3100");
+const socket = io(process.env.NEXT_PUBLIC_SOCK_URL);
 export default function LineM({ to, from, c1, c2 }) {
   const [chartArr, setChartArr] = useState([]);
   const [show, setShow] = useState([]);
@@ -74,7 +74,7 @@ export default function LineM({ to, from, c1, c2 }) {
     } catch (error) {}
   };
 
-  const loop = () => {
+  const down = () => {
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, "0");
     const minutes = now.getMinutes().toString().padStart(2, "0");
@@ -84,44 +84,35 @@ export default function LineM({ to, from, c1, c2 }) {
     let val = ar30.reduceRight(
       (c, cc) => {
         c.i++;
-        if (2.85 < cc.X) {
-          if (9 <= cc.X) c.val = c.val + 0.8;
-          else if (6 <= cc.X) c.val = c.val + 0.6;
-          else if (2.85 < cc.X) c.val = c.val + 0.3;
+        if (5 <= cc.X) {
+          c.val = c.val + 1;
         }
 
-        if (30 === c.i) {
-          console.log("30", c);
-        } else if (50 === c.i) {
-          console.log("50", c);
-        } else if (75 === c.i) {
-          console.log("75", c);
-        } else if (150 === c.i) {
-          console.log("150", c);
+        if (c.i === 16) {
+          console.log("16:", c.val);
+        }
+        if (c.i === 30) {
+          console.log("30:", c.val);
+        }
+        if (c.i === 90) {
+          console.log("90:", c.val);
         }
 
-        if (30 <= c.i && c.i <= 35 && c.val <= 2.9) {
+        if (c.i === 17 && c.val === 0) {
           const data = {
             iPOint: chartArr[chartArr.length - 1]?.I,
             number: `${c.i}:${c.val}`,
             time: timestamp,
           };
           sendTdata(data);
-        } else if (50 <= c.i && c.i <= 55 && c.val <= 3.5) {
+        } else if (c.i === 30 && c.val <= 1) {
           const data = {
             iPOint: chartArr[chartArr.length - 1]?.I,
             number: `${c.i}:${c.val}`,
             time: timestamp,
           };
           sendTdata(data);
-        } else if (70 <= c.i && c.i <= 85 && c.val <= 7.5) {
-          const data = {
-            iPOint: chartArr[chartArr.length - 1]?.I,
-            number: `${c.i}:${c.val}`,
-            time: timestamp,
-          };
-          sendTdata(data);
-        } else if (150 <= c.i && c.i <= 190 && c.val <= 18) {
+        } else if (c.i === 90 && c.val <= 9) {
           const data = {
             iPOint: chartArr[chartArr.length - 1]?.I,
             number: `${c.i}:${c.val}`,
@@ -129,43 +120,24 @@ export default function LineM({ to, from, c1, c2 }) {
           };
           sendTdata(data);
         }
-        return { ...c, val: Number(c.val.toFixed(2)) };
+
+        return { ...c, val: Number(c.val) };
       },
       { val: 0, i: 0 }
     );
-  };
-
-  const bob = () => {
-    let I1 = chartArr.findIndex((x) => x.I === c1),
-      I2 = chartArr.findIndex((x) => x.I === c2);
-    let ar30 = chartArr.slice(I1, I2);
-    ar30 = ar30.map((x) => (x = { ...x, X: +x.X.split("x")[0] }));
-    const val2 = ar30.reduceRight(
-      (c, cc) => {
-        c.i++;
-        if (2.85 < cc.X) {
-          if (9 <= cc.X) c.val = c.val + 0.8;
-          else if (6 <= cc.X) c.val = c.val + 0.6;
-          else if (2.85 < cc.X) c.val = c.val + 0.3;
-        }
-        return { ...c, val: Number(c.val.toFixed(2)) };
-      },
-      { val: 0, i: 0 }
-    );
-    console.log(ar30[0]?.I, ar30[ar30.length - 1]?.I, val2);
   };
 
   const cheker = () => {
-    loop();
-    //bob();
+    down();
   };
 
   const seter = () => {
-    if (show.length >= 100) {
-      let setArr = show.slice(show.length - 100, show.length);
+    if (show.length >= 50) {
+      let setArr = show.slice(show.length - 50, show.length);
       setShow(setArr);
-    } else if (chartArr.length >= 500) {
-      let setArr = chartArr.slice(chartArr.length - 500, chartArr.length);
+    }
+    if (chartArr.length >= 600) {
+      let setArr = chartArr.slice(chartArr.length - 600, chartArr.length);
       setChartArr(setArr);
     }
   };
@@ -181,7 +153,6 @@ export default function LineM({ to, from, c1, c2 }) {
 
   return (
     <div>
-      <h1>buger</h1>
       {err?.message === undefined ? (
         <Line
           className="rotate-90 p-6 md:rotate-0"
@@ -199,10 +170,9 @@ export default function LineM({ to, from, c1, c2 }) {
           }}
         />
       ) : (
-        <div className="flex justify-center">
+        <div>
           <h1> {err?.message}</h1>
           <Line
-            className="rotate-90 p-6 md:rotate-0"
             data={data}
             options={{
               responsive: true,

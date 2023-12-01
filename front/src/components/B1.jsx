@@ -14,22 +14,22 @@ import io from "socket.io-client";
 
 Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-const socket = io(process.env.NEXT_PUBLIC_SOCK_URL);
+const socket = io("http://localhost:3100");
 
-export default function BarC({ to, from }) {
+export default function B1({ to, from }) {
   const [chartArr, setChartArr] = useState([]);
   const [show, setShow] = useState([]);
   const [err, setErr] = useState({});
 
   const data = {
-    labels: show.map((x) => x.I),
-    //labels: show.slice(to, from).map((x) => x.I),
+    //labels: show.map((x) => x.I),
+    labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "",
-        data: show.map((x) => x.X.split("x")[0]),
-        //data: show.slice(to, from).map((x) => x.X.split("x")[0]),
-        backgroundColor: "aqua",
+        //data: show.map((x) => x.GT),
+        data: show.slice(to, from).map((x) => x.GT),
+        backgroundColor: "yellow",
         borderColor: "black",
         borderWidth: 1,
       },
@@ -87,7 +87,6 @@ export default function BarC({ to, from }) {
   useEffect(() => {
     getData();
   }, []);
-
   return (
     <div>
       {err?.message === undefined ? (
@@ -98,21 +97,22 @@ export default function BarC({ to, from }) {
             responsive: true,
             scales: {
               y: {
-                display: true,
+                display: false,
               },
             },
           }}
         />
       ) : (
-        <div>
+        <div className="flex justify-center">
           <h1> {err?.message}</h1>
           <Bar
+            className="rotate-90 p-6 md:rotate-0"
             data={data}
             options={{
               responsive: true,
               scales: {
                 y: {
-                  display: true,
+                  display: false,
                 },
               },
             }}
