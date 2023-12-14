@@ -27,8 +27,8 @@ export default function BarC({ to, from }) {
     datasets: [
       {
         label: "",
-        data: show.map((x) => x.X.split("x")[0]),
-        //data: show.slice(to, from).map((x) => x.X.split("x")[0]),
+        data: show.map((x) => x.X?.split("x")[0]),
+        //data: show.slice(to, from).map((x) => +x.X?.split("x")[0]),
         backgroundColor: "aqua",
         borderColor: "black",
         borderWidth: 1,
@@ -70,8 +70,8 @@ export default function BarC({ to, from }) {
   };
 
   const seter = () => {
-    if (show.length >= 50) {
-      let setArr = show.slice(show.length - 50, show.length);
+    if (show.length >= 100) {
+      let setArr = show.slice(show.length - 100, show.length);
       setShow(setArr);
     }
     if (chartArr.length >= 350) {

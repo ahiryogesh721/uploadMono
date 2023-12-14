@@ -4,20 +4,25 @@ import React from "react";
 import BarC from "@/components/barX";
 import LineM from "@/components/lineM";
 import L1 from "@/components/L1";
-import B1 from "@/components/B1";
+import L2 from "@/components/L2";
 
 export default function Home() {
-  let to = 0,
-    from = 4700;
-
+  let to = 600,
+    from = 800;
   return (
     <div className="mt-32 flex flex-row md:mt-0 md:flex-col ">
       <div>
         <BarC to={to} from={from} />
       </div>
       <div id="lineM">
+        <L2 to={to} from={from} />
+      </div>
+      <div id="lineM">
         <LineM to={to} from={from} />
       </div>
+      {/* <div d="lineM">
+        <L1 to={from - 800} from={from} />
+      </div> */}
     </div>
   );
 }

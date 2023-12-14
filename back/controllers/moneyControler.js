@@ -1,7 +1,7 @@
 const { moneyModel, recordsModel } = require("../models/moneyModel");
 const io = require("../server1");
-const accountSid = "ACa38c94af39126b8ff36d71e569958cc3";
-const authToken = "17751ba2234728b9babaec1ed2b0a88e";
+const accountSid = "AC08db424aefd4cbeff264ce222e6ae50d";
+const authToken = "20b92e4ecf161bb75fdc621aa4bc5b69";
 const client = require("twilio")(accountSid, authToken);
 
 const moneyPost = async (req, res) => {
@@ -56,15 +56,26 @@ const moneyGet = async (req, res) => {
 };
 
 const recordsGet = async (req, res) => {
-  let allData = await recordsModel.find().exec();
-  res.json(allData);
+  try {
+    let allData = await recordsModel.find().exec();
+    res.json(allData);
+    /* if (allData.length >= 500) {
+      allData = allData.slice(allData.length - 500, allData.length);
+    } */
+  } catch (error) {
+    resizeBy.json({ disconected: "all" });
+  }
 };
 
 const records = async (req, res) => {
+  console.log(req.body);
   const { iPOint, number, time } = req.body;
-  const wm = number[0];
   const lastEntry = await recordsModel.findOne().sort({ _id: -1 }).exec();
-  if (lastEntry === null || iPOint >= lastEntry.iPOint + 10) {
+  if (
+    lastEntry === null ||
+    iPOint >= lastEntry.iPOint + 15 ||
+    typeof number === Number
+  ) {
     const result = await recordsModel.create({
       number,
       iPOint,
@@ -72,12 +83,12 @@ const records = async (req, res) => {
     });
     console.log("new record entry:", result);
     if (result) {
-      const numbers = ["+919924261500", "+919313389830"];
+      /* const numbers = ["+919924261500"];
       numbers.forEach((x) => {
         client.messages
           .create({
             body: `${number}`,
-            from: "+19792274727",
+            from: "+14843348733",
             to: x,
           })
           .then((msg) => {
@@ -86,7 +97,7 @@ const records = async (req, res) => {
           .catch((err) => {
             console.log(err);
           });
-      });
+      }); */
       return res.sendStatus(200);
     } else return res.sendStatus(400);
   } else return res.sendStatus(400);

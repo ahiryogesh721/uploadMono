@@ -19,13 +19,13 @@ export default function L1({ to, from, c1, c2 }) {
   const [err, setErr] = useState({});
 
   const data = {
-    labels: chartArr.map((x) => x.I),
-    //labels: chartArr.slice(to, from).map((x) => x.I),
+    //labels: chartArr.map((x) => x.I),
+    labels: chartArr.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "",
-        data: chartArr.map((x) => x.buger),
-        //data: chartArr.slice(to, from).map((x) => x.buger),
+        //data: chartArr.map((x) => x.buger),
+        data: chartArr.slice(to, from).map((x) => x.buger),
         backgroundColor: "black",
         borderColor: "red",
         pointBorderColor: "blue",
@@ -61,26 +61,27 @@ export default function L1({ to, from, c1, c2 }) {
   const getData = async () => {
     try {
       const res = await axios.get("/post");
-      setChartArr(changer(res.data));
-      setShow(changer(res.data));
+      const seterArr = res.data;
+      setChartArr(changer(seterArr));
+      setShow(changer(seterArr));
     } catch (error) {
       setErr(error);
     }
   };
 
   const seter = () => {
-    if (show.length >= 50) {
-      let setArr = show.slice(show.length - 50, show.length);
+    if (show.length >= 800) {
+      let setArr = show.slice(show.length - 800, show.length);
       setShow(setArr);
     }
-    if (chartArr.length >= 600) {
-      let setArr = chartArr.slice(chartArr.length - 600, chartArr.length);
+    if (chartArr.length >= 800) {
+      let setArr = chartArr.slice(chartArr.length - 800, chartArr.length);
       setChartArr(setArr);
     }
   };
 
   useEffect(() => {
-    seter();
+    //seter();
   }, [chartArr.length]);
 
   useEffect(() => {

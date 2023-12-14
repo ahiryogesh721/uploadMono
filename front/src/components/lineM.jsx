@@ -13,6 +13,7 @@ import io from "socket.io-client";
 
 Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
 const socket = io(process.env.NEXT_PUBLIC_SOCK_URL);
+
 export default function LineM({ to, from, c1, c2 }) {
   const [chartArr, setChartArr] = useState([]);
   const [show, setShow] = useState([]);
@@ -80,7 +81,7 @@ export default function LineM({ to, from, c1, c2 }) {
     const minutes = now.getMinutes().toString().padStart(2, "0");
     const seconds = now.getSeconds().toString().padStart(2, "0");
     const timestamp = `${hours}:${minutes}:${seconds}`;
-    let ar30 = chartArr.map((x) => (x = { ...x, X: +x.X.split("x")[0] }));
+    let ar30 = chartArr.map((x) => (x = { ...x, X: +x.X?.split("x")[0] }));
     let val = ar30.reduceRight(
       (c, cc) => {
         c.i++;
@@ -88,37 +89,14 @@ export default function LineM({ to, from, c1, c2 }) {
           c.val = c.val + 1;
         }
 
-        if (c.i === 16) {
-          console.log("16:", c.val);
-        }
-        if (c.i === 30) {
-          console.log("30:", c.val);
-        }
-        if (c.i === 90) {
-          console.log("90:", c.val);
-        }
-
-        if (c.i === 17 && c.val === 0) {
+        if (c.i === 15 && c.val === 0) {
           const data = {
             iPOint: chartArr[chartArr.length - 1]?.I,
-            number: `${c.i}:${c.val}`,
+            number: `🎢`,
             time: timestamp,
           };
           sendTdata(data);
-        } else if (c.i === 30 && c.val <= 1) {
-          const data = {
-            iPOint: chartArr[chartArr.length - 1]?.I,
-            number: `${c.i}:${c.val}`,
-            time: timestamp,
-          };
-          sendTdata(data);
-        } else if (c.i === 90 && c.val <= 9) {
-          const data = {
-            iPOint: chartArr[chartArr.length - 1]?.I,
-            number: `${c.i}:${c.val}`,
-            time: timestamp,
-          };
-          sendTdata(data);
+          localStorage.setItem("token", JSON.stringify({ val: 1 }));
         }
 
         return { ...c, val: Number(c.val) };
@@ -127,17 +105,35 @@ export default function LineM({ to, from, c1, c2 }) {
     );
   };
 
+  const caler = () => {
+    const LX = +chartArr[chartArr.length - 1]?.X.split("x")[0];
+    let token = localStorage.getItem("token");
+    token = JSON.parse(token);
+
+    if (LX >= 5) {
+      socket.emit("msg", token.val === 2 ? "1stS" : "2ndS");
+      token.val = token.val - 1;
+      localStorage.setItem("token", JSON.stringify(token));
+    }
+  };
+
   const cheker = () => {
     down();
+    let token = localStorage.getItem("token");
+    if (token === null) return;
+    token = JSON.parse(token);
+    if (token.val !== 0) {
+      caler();
+    }
   };
 
   const seter = () => {
-    if (show.length >= 50) {
-      let setArr = show.slice(show.length - 50, show.length);
+    if (show.length >= 10) {
+      let setArr = show.slice(show.length - 100, show.length);
       setShow(setArr);
     }
-    if (chartArr.length >= 600) {
-      let setArr = chartArr.slice(chartArr.length - 600, chartArr.length);
+    if (chartArr.length >= 800) {
+      let setArr = chartArr.slice(chartArr.length - 800, chartArr.length);
       setChartArr(setArr);
     }
   };
@@ -178,7 +174,7 @@ export default function LineM({ to, from, c1, c2 }) {
               responsive: true,
               scales: {
                 y: {
-                  display: false,
+                  display: true,
                 },
                 x: {
                   display: false,
