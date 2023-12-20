@@ -19,6 +19,7 @@ const recordsSchema = new Schema({
 
 const moneyModel = model("money", moneySchema);
 
-const recordsModel = model("record", recordsSchema);
+const recordsModel5 = model("record5", recordsSchema);
+const recordsModel20 = model("record20", recordsSchema);
 
-module.exports = { moneyModel, recordsModel };
+module.exports = { moneyModel, recordsModel5, recordsModel20 };

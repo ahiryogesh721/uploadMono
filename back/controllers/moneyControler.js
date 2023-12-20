@@ -1,7 +1,11 @@
-const { moneyModel, recordsModel } = require("../models/moneyModel");
+const {
+  moneyModel,
+  recordsModel5,
+  recordsModel20,
+} = require("../models/moneyModel");
 const io = require("../server1");
-const accountSid = "AC08db424aefd4cbeff264ce222e6ae50d";
-const authToken = "20b92e4ecf161bb75fdc621aa4bc5b69";
+const accountSid = "AC1365e0479e0ea18054b3f69f3b441e0f";
+const authToken = "5412c9f13c254c91a01e8e15eb256fc0";
 const client = require("twilio")(accountSid, authToken);
 
 const moneyPost = async (req, res) => {
@@ -57,38 +61,32 @@ const moneyGet = async (req, res) => {
 
 const recordsGet = async (req, res) => {
   try {
-    let allData = await recordsModel.find().exec();
+    let allData = await recordsModel5.find().exec();
     res.json(allData);
-    /* if (allData.length >= 500) {
-      allData = allData.slice(allData.length - 500, allData.length);
-    } */
-  } catch (error) {
-    resizeBy.json({ disconected: "all" });
-  }
+  } catch (error) {}
 };
 
 const records = async (req, res) => {
-  console.log(req.body);
   const { iPOint, number, time } = req.body;
-  const lastEntry = await recordsModel.findOne().sort({ _id: -1 }).exec();
+  const lastEntry5 = await recordsModel5.findOne().sort({ _id: -1 }).exec();
+  const lastEntry20 = await recordsModel20.findOne().sort({ _id: -1 }).exec();
   if (
-    lastEntry === null ||
-    iPOint >= lastEntry.iPOint + 15 ||
-    typeof number === Number
+    (lastEntry5 === null || iPOint >= lastEntry5.iPOint + 10) &&
+    number === 5
   ) {
-    const result = await recordsModel.create({
+    const result = await recordsModel5.create({
       number,
       iPOint,
       time,
     });
     console.log("new record entry:", result);
     if (result) {
-      /* const numbers = ["+919924261500"];
+      const numbers = ["+919924261500"];
       numbers.forEach((x) => {
         client.messages
           .create({
             body: `${number}`,
-            from: "+14843348733",
+            from: "+12059273808",
             to: x,
           })
           .then((msg) => {
@@ -97,7 +95,35 @@ const records = async (req, res) => {
           .catch((err) => {
             console.log(err);
           });
-      }); */
+      });
+      return res.sendStatus(200);
+    } else return res.sendStatus(400);
+  } else if (
+    (lastEntry20 === null || iPOint >= lastEntry20.iPOint + 10) &&
+    number === 20
+  ) {
+    const result = await recordsModel20.create({
+      number,
+      iPOint,
+      time,
+    });
+    console.log("new record entry:", result);
+    if (result) {
+      const numbers = ["+919924261500"];
+      numbers.forEach((x) => {
+        client.messages
+          .create({
+            body: `${number}`,
+            from: "+12059273808",
+            to: x,
+          })
+          .then((msg) => {
+            console.log("sending msg");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
       return res.sendStatus(200);
     } else return res.sendStatus(400);
   } else return res.sendStatus(400);

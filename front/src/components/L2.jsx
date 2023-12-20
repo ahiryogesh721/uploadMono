@@ -34,8 +34,8 @@ export default function L1({ to, from, c1, c2 }) {
       },
       {
         label: "3",
-        //data: show.map((x) => x.D3),
-        data: show.slice(to, from).map((x) => x.D3),
+        data: show.map((x) => x.D3),
+        //data: show.slice(to, from).map((x) => x.D3),
         backgroundColor: "yellow",
         borderColor: "yellow",
         pointBorderColor: "black",
@@ -100,7 +100,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D2: i <= 2 ? -i : i - 1,
+              D2: i <= 1 ? -i : i,
             };
           }
           i++;
@@ -125,7 +125,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D3: i <= 2 ? -i : i - 1,
+              D3: i <= 1 ? -i : i,
             };
           }
           i++;
@@ -150,7 +150,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D5: i <= 5 ? -i : i - 1,
+              D5: i <= 1 ? -i * 5 : i,
             };
           }
           i++;
@@ -175,7 +175,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D10: i <= 3 ? -i : i - 1,
+              D10: i <= 2 ? -i * 5 : i,
             };
           }
           i++;
@@ -200,7 +200,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D20: i <= 5 ? -i + -1 : i - 1,
+              D20: i <= 2 ? -i * 5 : i,
             };
           }
           i++;
@@ -237,7 +237,7 @@ export default function L1({ to, from, c1, c2 }) {
   };
 
   const seter = () => {
-    if (show.length >= 100) {
+    if (show.length >= 10) {
       let setArr = show.slice(show.length - 100, show.length);
       setShow(setArr);
     }
@@ -253,46 +253,117 @@ export default function L1({ to, from, c1, c2 }) {
     } catch (error) {}
   };
 
-  const cheker = () => {
-    const re10 = () => {
-      let ar = chartArr.slice(chartArr.length - 10, chartArr.length);
-      ar = ar.map((x) => (x = { ...x, X: +x.X?.split("x")[0] }));
-      const diss = ar.filter((x) => x?.X >= 10).length;
-      if (
-        chartArr[chartArr.length - 11]?.D10 !== 1 &&
-        diss === 0 &&
-        chartArr.length >= 80
-      ) {
-        socket.emit("msg", "10");
-        localStorage.setItem("token10", JSON.stringify({ val: false }));
-      }
-    };
+  const init5 = () => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    const seconds = now.getSeconds().toString().padStart(2, "0");
+    const timestamp = `${hours}:${minutes}:${seconds}`;
 
-    let token10 = localStorage.getItem("token10");
-    if (token10 === null) return;
-    token10 = JSON.parse(token10);
-    if (token10.val) {
-      re10();
-    }
-    if (chartArr[chartArr.length - 1]?.D10 >= 25) {
-      const now = new Date();
-      const hours = now.getHours().toString().padStart(2, "0");
-      const minutes = now.getMinutes().toString().padStart(2, "0");
-      const seconds = now.getSeconds().toString().padStart(2, "0");
-      const timestamp = `${hours}:${minutes}:${seconds}`;
-      const data = {
-        iPOint: chartArr[chartArr.length - 1]?.I,
-        number: chartArr[chartArr.length - 1]?.D10,
-        time: timestamp,
-      };
-      sendTdata(data);
-      localStorage.setItem(
-        "token10",
-        JSON.stringify({
-          val: true,
-        })
+    let token = localStorage.getItem("mainTok5");
+    if (token === null) {
+      chartArr.reduceRight(
+        (c, cc, i) => {
+          if (cc.D5 > 0) {
+            return { ...c, plu: c?.plu + 1, min: c?.min };
+          }
+          if (cc.D5 < 0) {
+            return { ...c, plu: c?.plu, min: c?.min + 1 };
+          }
+          if (c.plu === 5 && c.min === 0) {
+            const data = {
+              iPOint: chartArr[chartArr.length - 1]?.I,
+              number: 5,
+              time: timestamp,
+            };
+            sendTdata(data);
+            localStorage.setItem("mainTok5", JSON.stringify({ val: true }));
+          }
+          return c;
+        },
+        { plu: 0, min: 0 }
       );
     }
+  };
+
+  const init20 = () => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    const seconds = now.getSeconds().toString().padStart(2, "0");
+    const timestamp = `${hours}:${minutes}:${seconds}`;
+
+    let token = localStorage.getItem("mainTok20");
+    if (token === null) {
+      chartArr.reduceRight(
+        (c, cc, i) => {
+          if (c.min < 0) {
+            console.log(c);
+          }
+          if (cc.D20 > 0) {
+            return { ...c, plu: c?.plu + 1, min: c?.min };
+          }
+          if (cc.D20 < 0) {
+            return { ...c, plu: c?.plu, min: c?.min + 1 };
+          }
+          if (c.plu === 12 && c.min === 0) {
+            const data = {
+              iPOint: chartArr[chartArr.length - 1]?.I,
+              number: 20,
+              time: timestamp,
+            };
+            sendTdata(data);
+            localStorage.setItem("mainTok20", JSON.stringify({ val: true }));
+          }
+          return c;
+        },
+        { plu: 0, min: 0 }
+      );
+    }
+  };
+
+  const caler5 = () => {
+    const LD5 = chartArr[chartArr.length - 1]?.D5;
+    if (LD5 < 0) {
+      socket.emit("msg", "faill");
+      localStorage.removeItem("mainTok5");
+    }
+  };
+
+  const caler20 = () => {
+    const LD20 = chartArr[chartArr.length - 1];
+    if (LD20?.D20 > 0 || LD20?.D10 > 0) {
+      socket.emit("msg", "GO ON");
+    }
+    if (LD20?.D20 < 0) {
+      socket.emit("msg", "faill");
+      localStorage.removeItem("mainTok20");
+    }
+  };
+
+  const chek5 = () => {
+    init5();
+    let token = localStorage.getItem("mainTok5");
+    if (token === null) return;
+    token = JSON.parse(token);
+    if (token.val) {
+      caler5();
+    }
+  };
+
+  const chek20 = () => {
+    init20();
+    let token = localStorage.getItem("mainTok20");
+    if (token === null) return;
+    token = JSON.parse(token);
+    if (token.val) {
+      caler20();
+    }
+  };
+
+  const cheker = () => {
+    chek5();
+    chek20();
   };
 
   useEffect(() => {
@@ -303,12 +374,6 @@ export default function L1({ to, from, c1, c2 }) {
   useEffect(() => {
     getData();
   }, []);
-
-  /* chartArr.forEach((x) => {
-    if (x.D10 >= 20) {
-      console.log(x.I);
-    }
-  }); */
 
   return (
     <div>

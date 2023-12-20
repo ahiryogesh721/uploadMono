@@ -75,61 +75,9 @@ export default function LineM({ to, from, c1, c2 }) {
     } catch (error) {}
   };
 
-  const down = () => {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, "0");
-    const minutes = now.getMinutes().toString().padStart(2, "0");
-    const seconds = now.getSeconds().toString().padStart(2, "0");
-    const timestamp = `${hours}:${minutes}:${seconds}`;
-    let ar30 = chartArr.map((x) => (x = { ...x, X: +x.X?.split("x")[0] }));
-    let val = ar30.reduceRight(
-      (c, cc) => {
-        c.i++;
-        if (5 <= cc.X) {
-          c.val = c.val + 1;
-        }
-
-        if (c.i === 15 && c.val === 0) {
-          const data = {
-            iPOint: chartArr[chartArr.length - 1]?.I,
-            number: `🎢`,
-            time: timestamp,
-          };
-          sendTdata(data);
-          localStorage.setItem("token", JSON.stringify({ val: 1 }));
-        }
-
-        return { ...c, val: Number(c.val) };
-      },
-      { val: 0, i: 0 }
-    );
-  };
-
-  const caler = () => {
-    const LX = +chartArr[chartArr.length - 1]?.X.split("x")[0];
-    let token = localStorage.getItem("token");
-    token = JSON.parse(token);
-
-    if (LX >= 5) {
-      socket.emit("msg", token.val === 2 ? "1stS" : "2ndS");
-      token.val = token.val - 1;
-      localStorage.setItem("token", JSON.stringify(token));
-    }
-  };
-
-  const cheker = () => {
-    down();
-    let token = localStorage.getItem("token");
-    if (token === null) return;
-    token = JSON.parse(token);
-    if (token.val !== 0) {
-      caler();
-    }
-  };
-
   const seter = () => {
     if (show.length >= 10) {
-      let setArr = show.slice(show.length - 100, show.length);
+      let setArr = show.slice(show.length - 200, show.length);
       setShow(setArr);
     }
     if (chartArr.length >= 800) {
@@ -139,7 +87,6 @@ export default function LineM({ to, from, c1, c2 }) {
   };
 
   useEffect(() => {
-    cheker();
     seter();
   }, [chartArr.length]);
 

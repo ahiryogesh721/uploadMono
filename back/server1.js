@@ -1,8 +1,8 @@
 const express = require("express");
 const app = express();
 const { Server } = require("socket.io");
-const accountSid = "AC08db424aefd4cbeff264ce222e6ae50d";
-const authToken = "20b92e4ecf161bb75fdc621aa4bc5b69";
+const accountSid = "AC1365e0479e0ea18054b3f69f3b441e0f";
+const authToken = "5412c9f13c254c91a01e8e15eb256fc0";
 const client = require("twilio")(accountSid, authToken);
 
 const PORT = 3100;
@@ -20,12 +20,12 @@ const io = new Server(appL, {
 
 io.on("connection", (socket) => {
   socket.on("msg", (data) => {
-    /* const numbers = ["+919924261500"];
+    const numbers = ["+919924261500"];
     numbers.forEach((x) => {
       client.messages
         .create({
           body: `${data}`,
-          from: "+14843348733",
+          from: "+12059273808",
           to: x,
         })
         .then((msg) => {
@@ -34,7 +34,7 @@ io.on("connection", (socket) => {
         .catch((err) => {
           console.log(err);
         });
-    }); */
+    });
   });
 });
 
