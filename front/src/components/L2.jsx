@@ -19,13 +19,13 @@ export default function L1({ to, from, c1, c2 }) {
   const [err, setErr] = useState({});
 
   const data = {
-    labels: show.map((x) => x.I),
-    //labels: show.slice(to, from).map((x) => x.I),
+    //labels: show.map((x) => x.I),
+    labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "2",
-        data: show.map((x) => x.D3),
-        //data: show.slice(to, from).map((x) => x.D2),
+        //data: show.map((x) => x.D3),
+        data: show.slice(to, from).map((x) => x.D2),
         backgroundColor: "pink",
         borderColor: "plink",
         pointBorderColor: "black",
@@ -33,8 +33,8 @@ export default function L1({ to, from, c1, c2 }) {
         tension: 0.1,
       },
       {
-        label: "3",
-        //data: show.map((x) => x.D3),
+        //label: "3",
+        data: show.map((x) => x.D3),
         data: show.slice(to, from).map((x) => x.D3),
         backgroundColor: "yellow",
         borderColor: "yellow",
@@ -44,8 +44,8 @@ export default function L1({ to, from, c1, c2 }) {
       },
       {
         label: "5",
-        data: show.map((x) => x.D5),
-        //data: show.slice(to, from).map((x) => x.D5),
+        //data: show.map((x) => x.D5),
+        data: show.slice(to, from).map((x) => x.D5),
         backgroundColor: "red",
         borderColor: "red",
         pointBorderColor: "black",
@@ -54,8 +54,8 @@ export default function L1({ to, from, c1, c2 }) {
       },
       {
         label: "10",
-        data: show.map((x) => x.D10),
-        //data: show.slice(to, from).map((x) => x.D10),
+        //data: show.map((x) => x.D10),
+        data: show.slice(to, from).map((x) => x.D10),
         backgroundColor: "blue",
         borderColor: "blue",
         pointBorderColor: "black",
@@ -90,17 +90,17 @@ export default function L1({ to, from, c1, c2 }) {
 
   function con2(arr) {
     return arr.map((x, I) => {
-      if (+x.X?.split("x")[0] >= 2 && I > 20) {
+      if (+x.X?.split("x")[0] >= 2 && x.I > 20) {
         let finder = true;
         let i = 1;
         while (finder) {
           let indexOfBreker = I - i;
-          let lx = arr[indexOfBreker]?.X?.split("x")[0];
+          let lx = +arr[indexOfBreker]?.X?.split("x")[0];
           if (lx >= 2) {
             finder = false;
             return {
               ...x,
-              D2: i <= 2 ? -i : i - 1,
+              D2: i <= 1 ? -i : i ,
             };
           }
           i++;
@@ -125,7 +125,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D3: i <= 2 ? -i : i - 1,
+              D3: i <= 1 ? -i : i,
             };
           }
           i++;
@@ -140,7 +140,7 @@ export default function L1({ to, from, c1, c2 }) {
 
   function con5(arr) {
     return arr.map((x, I) => {
-      if (+x.X?.split("x")[0] >= 5 && I > 50) {
+      if (+x.X?.split("x")[0] >= 5 && x.I > 50) {
         let finder = true;
         let i = 1;
         while (finder) {
@@ -150,7 +150,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D5: i <= 5 ? -i : i - 1,
+              D5: i <= 1 ? -i : i ,
             };
           }
           i++;
@@ -175,7 +175,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D10: i <= 3 ? -i : i - 1,
+              D10: i <= 2 ? -i : i ,
             };
           }
           i++;
@@ -190,7 +190,7 @@ export default function L1({ to, from, c1, c2 }) {
 
   function con20(arr) {
     return arr.map((x, I) => {
-      if (+x.X?.split("x")[0] >= 20 && I > 100) {
+      if (+x.X?.split("x")[0] >= 20 && x.I > 100) {
         let finder = true;
         let i = 1;
         while (finder) {
@@ -200,7 +200,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D20: i <= 5 ? -i + -1 : i - 1,
+              D20: i <= 2 ? -i *5 : i ,
             };
           }
           i++;
@@ -296,19 +296,13 @@ export default function L1({ to, from, c1, c2 }) {
   };
 
   useEffect(() => {
-    seter();
-    cheker();
+    //seter();
+    //cheker();
   }, [chartArr.length]);
 
   useEffect(() => {
     getData();
   }, []);
-
-  /* chartArr.forEach((x) => {
-    if (x.D10 >= 20) {
-      console.log(x.I);
-    }
-  }); */
 
   return (
     <div>

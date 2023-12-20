@@ -22,13 +22,13 @@ export default function BarC({ to, from }) {
   const [err, setErr] = useState({});
 
   const data = {
-    labels: show.map((x) => x.I),
-    //labels: show.slice(to, from).map((x) => x.I),
+    //labels: show.map((x) => x.I),
+    labels: show.slice(to, from).map((x) => x.time),
     datasets: [
       {
         label: "",
-        data: show.map((x) => x.X?.split("x")[0]),
-        //data: show.slice(to, from).map((x) => +x.X?.split("x")[0]),
+        //data: show.map((x) => x.X?.split("x")[0]),
+        data: show.slice(to, from).map((x) => +x.X?.split("x")[0]),
         backgroundColor: "aqua",
         borderColor: "black",
         borderWidth: 1,
@@ -81,7 +81,7 @@ export default function BarC({ to, from }) {
   };
 
   useEffect(() => {
-    seter();
+    //seter();
   }, [chartArr.length]);
 
   useEffect(() => {
