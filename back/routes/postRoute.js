@@ -1,4 +1,3 @@
-const app = require("express")();
 const router = require("express").Router();
 const moneyController = require("../controllers/moneyControler");
 

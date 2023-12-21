@@ -5,8 +5,7 @@ const authToken = "20b92e4ecf161bb75fdc621aa4bc5b69";
 const client = require("twilio")(accountSid, authToken);
 
 const moneyPost = async (req, res) => {
-  console.log(req.body);
-  /* const lastEntry = await moneyModel.findOne().sort({ _id: -1 }).exec();
+  const lastEntry = await moneyModel.findOne().sort({ _id: -1 }).exec();
   const { players, playersBets, playersGets, X } = req.body;
   if (
     players !== lastEntry?.players &&
@@ -35,13 +34,14 @@ const moneyPost = async (req, res) => {
             : parseInt(lastEntry?.buger) + parseInt(inout),
       });
       if (result) {
+        console.log(result);
         io.emit("banger", result);
       }
       res.sendStatus(200);
     } catch (error) {
       console.log("couldnt save");
     }
-  } else res.sendStatus(200); */
+  } else res.sendStatus(200);
 };
 
 const moneyDellet = async (req, res) => {
@@ -69,7 +69,6 @@ const recordsGet = async (req, res) => {
 };
 
 const records = async (req, res) => {
-  console.log(req.body);
   const { iPOint, number, time } = req.body;
   const lastEntry = await recordsModel.findOne().sort({ _id: -1 }).exec();
   if (

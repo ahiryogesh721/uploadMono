@@ -10,6 +10,7 @@ const mongoess = require("mongoose");
 
 const rootRoute = require("./routes/rootRoute");
 const postRoute = require("./routes/postRoute");
+const cardsRoute = require("./routes/cardsRoute");
 
 const PORT = 3500;
 
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/", rootRoute);
 app.use("/post", postRoute);
+app.use("/cards", cardsRoute);
 
 mongoess.connection.once("open", () => {
   app.listen(PORT, () => {

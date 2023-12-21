@@ -7,9 +7,7 @@ import L1 from "@/components/L1";
 import L2 from "@/components/L2";
 
 export default function Home() {
-  let to =850,
-    from =8550;
-  return (
+  /* return (
     <div className="mt-32 flex flex-row md:mt-0 md:flex-col ">
       <div>
         <BarC to={to} from={from} />
@@ -20,9 +18,14 @@ export default function Home() {
       <div id="lineM">
         <LineM to={to} from={from} />
       </div>
-      {/* <div d="lineM">
+      <div d="lineM">
         <L1 to={from - 800} from={from} />
-      </div> */}
+      </div> 
+    </div> 
+  ); */
+  return (
+    <div>
+      <h1>hello</h1>
     </div>
   );
 }
