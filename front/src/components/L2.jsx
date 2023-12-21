@@ -150,7 +150,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D5: i <= 1 ? -i * 5 : i,
+              D5: i <= 5 ? -i : i,
             };
           }
           i++;
@@ -362,8 +362,8 @@ export default function L1({ to, from, c1, c2 }) {
   };
 
   const cheker = () => {
-    chek5();
-    chek20();
+    //chek5();
+    //chek20();
   };
 
   useEffect(() => {
