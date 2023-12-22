@@ -19,12 +19,12 @@ export default function L1({ to, from, c1, c2 }) {
   const [err, setErr] = useState({});
 
   const data = {
-    //labels: show.map((x) => x.I),
+    labels: show.map((x) => x.I),
     labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "2",
-        //data: show.map((x) => x.D3),
+        data: show.map((x) => x.D3),
         data: show.slice(to, from).map((x) => x.D2),
         backgroundColor: "pink",
         borderColor: "plink",
@@ -34,7 +34,7 @@ export default function L1({ to, from, c1, c2 }) {
       },
       {
         label: "3",
-        //data: show.map((x) => x.D3),
+        data: show.map((x) => x.D3),
         data: show.slice(to, from).map((x) => x.D3),
         backgroundColor: "yellow",
         borderColor: "yellow",
@@ -44,7 +44,7 @@ export default function L1({ to, from, c1, c2 }) {
       },
       {
         label: "5",
-        //data: show.map((x) => x.D5),
+        data: show.map((x) => x.D5),
         data: show.slice(to, from).map((x) => x.D5),
         backgroundColor: "red",
         borderColor: "red",
@@ -54,7 +54,7 @@ export default function L1({ to, from, c1, c2 }) {
       },
       {
         label: "10",
-        //data: show.map((x) => x.D10),
+        data: show.map((x) => x.D10),
         data: show.slice(to, from).map((x) => x.D10),
         backgroundColor: "blue",
         borderColor: "blue",
@@ -64,7 +64,7 @@ export default function L1({ to, from, c1, c2 }) {
       },
       {
         label: "20",
-        //data: show.map((x) => x.D20),
+        data: show.map((x) => x.D20),
         data: show.slice(to, from).map((x) => x.D20),
         backgroundColor: "white",
         borderColor: "white",
@@ -372,7 +372,7 @@ export default function L1({ to, from, c1, c2 }) {
   };
 
   useEffect(() => {
-    //seter();
+    seter();
     cheker();
   }, [chartArr.length]);
 
