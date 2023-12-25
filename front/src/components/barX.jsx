@@ -14,8 +14,6 @@ import io from "socket.io-client";
 
 Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-const socket = io(process.env.NEXT_PUBLIC_SOCK_URL);
-
 export default function BarC({ to, from }) {
   const [chartArr, setChartArr] = useState([]);
   const [show, setShow] = useState([]);
@@ -23,12 +21,12 @@ export default function BarC({ to, from }) {
 
   const data = {
     //labels: show.map((x) => x.I),
-    labels: show.slice(to, from).map((x) => x.time),
+    labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "",
         //data: show.map((x) => x.X?.split("x")[0]),
-        data: show.slice(to, from).map((x) => +x.X?.split("x")[0]),
+        data: show.slice(to, from).map((x) => x.val==='Player A'?1:x.val==='Player B'?2:0),
         backgroundColor: "aqua",
         borderColor: "black",
         borderWidth: 1,
@@ -36,34 +34,11 @@ export default function BarC({ to, from }) {
     ],
   };
 
-  function changer(data) {
-    const uniqueIds = new Set();
-    return data.filter((entry) => {
-      if (uniqueIds.has(entry.I)) {
-        return false;
-      }
-
-      uniqueIds.add(entry.I);
-
-      return true;
-    });
-  }
-
-  socket.on("error", (error) => {
-    console.error("Connection error:", error);
-  });
-
-  socket.off("banger");
-  socket.once("banger", (data) => {
-    setChartArr((pre) => changer([...pre, data]));
-    setShow((pre) => changer([...pre, data]));
-  });
-
   const getData = async () => {
     try {
-      const res = await axios.get("/post");
-      setChartArr(changer(res.data));
-      setShow(changer(res.data));
+      const res = await axios.get("/cards");
+      setChartArr(res.data);
+      setShow(res.data);
     } catch (error) {
       setErr(error);
     }
@@ -88,6 +63,7 @@ export default function BarC({ to, from }) {
     getData();
   }, []);
 
+  console.log(show);
   return (
     <div>
       {err?.message === undefined ? (
