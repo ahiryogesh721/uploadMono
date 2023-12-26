@@ -175,7 +175,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D10: i <= 5 ? -i : i,
+              D10: i <= 3 ? -i : i,
             };
           }
           i++;
@@ -200,7 +200,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D20: i <= 5 ? -i : i,
+              D20: i <= 3 ? -i : i,
             };
           }
           i++;
