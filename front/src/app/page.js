@@ -7,8 +7,8 @@ import L1 from "@/components/L1";
 import L2 from "@/components/L2";
 
 export default function Home() {
-  let to = 1100,
-    from = 1500;
+  let to = 800,
+    from = 1000;
   return (
     <div className="mt-32 flex flex-row md:mt-0 md:flex-col ">
       <div>

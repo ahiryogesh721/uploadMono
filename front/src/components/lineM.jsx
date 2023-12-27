@@ -21,7 +21,7 @@ export default function LineM({ to, from, c1, c2 }) {
 
   const data = {
     //labels: show.map((x) => x.T),
-    labels: show.slice(to, from).map((x) => x.time),
+    labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "",

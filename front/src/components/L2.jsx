@@ -100,7 +100,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D2: i //<= 1 ? -i : i,
+              D2: i <= 1 ? -i : i,
             };
           }
           i++;
@@ -146,11 +146,11 @@ export default function L1({ to, from, c1, c2 }) {
         while (finder) {
           let indexOfBreker = I - i;
           let lx = arr[indexOfBreker]?.X?.split("x")[0];
-          if (lx >= 5) {
+          if (lx >= 10) {
             finder = false;
             return {
               ...x,
-              D5: i <= 4 ? -i : i,
+              D5: i <= 3 ? -i : i,
             };
           }
           i++;
