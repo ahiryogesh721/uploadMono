@@ -34,7 +34,6 @@ const moneyPost = async (req, res) => {
             : parseInt(lastEntry?.buger) + parseInt(inout),
       });
       if (result) {
-        console.log(result);
         io.emit("banger", result);
       }
       res.sendStatus(200);

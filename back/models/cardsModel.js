@@ -4,6 +4,8 @@ const cardsSchema = new Schema({
   I: Schema.Types.Mixed,
   val: Schema.Types.Mixed,
   time: Schema.Types.Mixed,
+  a10: Schema.Types.Mixed,
+  b10: Schema.Types.Mixed,
 });
 
 const cardsModel2 = model("cards-tod", cardsSchema);

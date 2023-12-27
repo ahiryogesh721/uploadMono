@@ -2,10 +2,10 @@ function mainInit() {
   function boxChek() {
     let boxVal = document.querySelector(
       "#root > div:nth-child(2) > div > div > div.indian-casino-iframe-ctn.web-view > div.web-view > div.timer > div > div > div.winner"
-    )
+    );
 
-    if (boxVal===null) {
-      console.log('waiting for winer tag');
+    if (boxVal === null) {
+      console.log("waiting for winer tag");
     } else {
       console.log("making an api call");
       fetch("http://localhost:3500/cards", {
@@ -16,6 +16,7 @@ function mainInit() {
         },
         body: JSON.stringify({
           val: boxVal.textContent,
+          game: "g-2ct",
         }),
       });
     }
