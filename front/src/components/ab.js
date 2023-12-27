@@ -14,33 +14,55 @@ import io from "socket.io-client";
 
 Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-export default function BarC({ to, from }) {
+export default function Ab({ to, from }) {
   const [chartArr, setChartArr] = useState([]);
   const [show, setShow] = useState([]);
   const [err, setErr] = useState({});
 
   const data = {
-    labels: show.map((x) => x.I),
-    //labels: show.slice(to, from).map((x) => x.I),
+    //labels: show.map((x) => x.I),
+    labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
-        label: "",
-        data: show.map((x) =>
-          x.val === "Player A" ? 1 : x.val === "Player B" ? 2 : 0
-        ),
-        //data: show.slice(to, from).map((x) => x.val==='Player A'?1:x.val==='Player B'?2:0),
-        backgroundColor: "aqua",
+        label: "a",
+        //data: show.map((x) => x.X?.split("x")[0]),
+        data: show.slice(to, from).map((x) => x.a10),
+        backgroundColor: "blue",
         borderColor: "black",
         borderWidth: 1,
       },
+      {
+        label: "b",
+        //data: show.map((x) => x.X?.split("x")[0]),
+        data: show.slice(to, from).map((x) => x.b10),
+        backgroundColor: "red",
+        borderColor: "black",
+        borderWidth: 1,
+      }
     ],
   };
+
+  const ab10=(arr)=>{
+    return arr.map((x,I)=>{
+        if(I>=20){
+            let saver= arr.slice(I-20,I).reduceRight((c,cc)=>{
+                if(cc.val==='Player A'){
+                    return {...c,a:c.a+1}
+                }if(cc.val==='Player B'){
+                    return {...c,b:c.b+1}
+                }else return c
+            },{a:0,b:0})
+            return {...x,a10:saver.a,b10:saver.b}
+        }
+        return {...x,a10:0,b10:0}
+    })
+  }
 
   const getData = async () => {
     try {
       const res = await axios.get("/cards");
-      setChartArr(res.data);
-      setShow(res.data);
+      setChartArr(ab10(res.data));
+      setShow(ab10(res.data));
     } catch (error) {
       setErr(error);
     }
@@ -58,7 +80,7 @@ export default function BarC({ to, from }) {
   };
 
   useEffect(() => {
-    seter();
+    //seter();
   }, [chartArr.length]);
 
   useEffect(() => {
