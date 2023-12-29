@@ -27,12 +27,14 @@ export default function BarC({ to, from }) {
     datasets: [
       {
         label: "",
-        //data: show.map((x) => x.X?.split("x")[0]),
-        data: show
+        data: show.map((x) =>
+          x.val === "Player A" ? 1 : x.val === "Player B" ? 2 : 0
+        ),
+        /* data: show
           .slice(to, from)
           .map((x) =>
             x.val === "Player A" ? 1 : x.val === "Player B" ? 2 : 0
-          ),
+          ), */
         backgroundColor: "aqua",
         borderColor: "black",
         borderWidth: 1,
@@ -60,80 +62,79 @@ export default function BarC({ to, from }) {
     }
   };
 
+  const sendTdata = async (data) => {
+    try {
+      await axios.post("/post/records", data);
+    } catch (error) {}
+  };
+
   const chek3 = (selecter) => {
     if (selecter === "Player A") {
       chartArr.reduceRight(
         (c, cc, i) => {
-          if (c?.i === 3 && c?.elemineter === false) {
+          if (c?.i === 3 && c?.elemineter) {
             const data = {
               iPOint: chartArr[chartArr.length - 1]?.I,
-              number: `${selecter}`,
+              number: `${selecter} inbounde`,
               time: timestamp,
             };
             sendTdata(data);
             localStorage.setItem("atoken", JSON.stringify({ val: true }));
           }
           if (
-            //cheking for 4
             cc.val === selecter &&
-            chartArr[i - 1] === selecter &&
-            chartArr[i - 2] === selecter &&
-            chartArr[i - 3] === selecter
+            chartArr[i - 1]?.val === selecter &&
+            chartArr[i - 2]?.val === selecter &&
+            chartArr[i - 3]?.val === selecter
           ) {
-            return { ...c, elemineter: false };
+            return { ...c, elimineter: false };
           }
           if (
-            //cheking for 3
             cc.val === selecter &&
-            chartArr[i - 1] === selecter &&
-            chartArr[i + 1] === selecter &&
-            chartArr[i - 2] !== selecter &&
-            chartArr[i + 2] !== selecter &&
-            c?.elemineter
+            chartArr[i - 1]?.val === cc.val &&
+            chartArr[i - 2]?.val !== cc.val &&
+            chartArr[i + 1]?.val === cc.val &&
+            chartArr[i + 2]?.val !== cc.val
           ) {
-            return { ...c, i: c?.i + 1 };
+            return { i: c.i + 1, elimineter: true };
           }
           return c;
         },
         { i: 0, elimineter: true }
       );
     } else if (selecter === "Player B") {
-      let bob = chartArr.reduceRight(
+      chartArr.reduceRight(
         (c, cc, i) => {
-          if (c?.i === 3 && c?.elemineter === false) {
+          if (c?.i === 3 && c?.elemineter) {
             const data = {
               iPOint: chartArr[chartArr.length - 1]?.I,
-              number: `${selecter}`,
+              number: `${selecter} inbounde`,
               time: timestamp,
             };
             sendTdata(data);
             localStorage.setItem("btoken", JSON.stringify({ val: true }));
           }
           if (
-            //cheking for 4
             cc.val === selecter &&
-            chartArr[i - 1] === selecter &&
-            chartArr[i - 2] === selecter &&
-            chartArr[i - 3] === selecter
+            chartArr[i - 1]?.val === selecter &&
+            chartArr[i - 2]?.val === selecter &&
+            chartArr[i - 3]?.val === selecter
           ) {
-            return { ...c, elemineter: false };
+            return { ...c, elimineter: false };
           }
           if (
-            //cheking for 3
             cc.val === selecter &&
-            chartArr[i - 1] === selecter &&
-            chartArr[i + 1] === selecter &&
-            chartArr[i - 2] !== selecter &&
-            chartArr[i + 2] !== selecter &&
-            c?.elemineter
+            chartArr[i - 1]?.val === cc.val &&
+            chartArr[i - 2]?.val !== cc.val &&
+            chartArr[i + 1]?.val === cc.val &&
+            chartArr[i + 2]?.val !== cc.val
           ) {
-            return { ...c, i: c?.i + 1 };
+            return { i: c.i + 1, elimineter: true };
           }
           return c;
         },
         { i: 0, elimineter: true }
       );
-      console.log(bob);
     }
   };
 
@@ -148,12 +149,6 @@ export default function BarC({ to, from }) {
     }
   };
 
-  const sendTdata = async (data) => {
-    try {
-      await axios.post("/post/records", data);
-    } catch (error) {}
-  };
-
   const caler = (selecter) => {
     if (selecter === "PLayer A") {
       let atoken = localStorage.getItem("atoken");
@@ -163,7 +158,7 @@ export default function BarC({ to, from }) {
           chartArr[chartArr.length - 1] === selecter &&
           chartArr[chartArr.length - 2] === selecter
         ) {
-          socket.emit("msg", selecter);
+          socket.emit("msg", `${selecter} place bet after 3rd`);
         }
         if (
           chartArr[chartArr.length - 1] === selecter &&
@@ -171,6 +166,7 @@ export default function BarC({ to, from }) {
           chartArr[chartArr.length - 3] === selecter &&
           chartArr[chartArr.length - 4] === selecter
         ) {
+          socket.emit("msg", `${selecter} expired`);
           localStorage.setItem("atoken", JSON.stringify({ val: false }));
         }
       }
@@ -182,7 +178,7 @@ export default function BarC({ to, from }) {
           chartArr[chartArr.length - 1] === selecter &&
           chartArr[chartArr.length - 2] === selecter
         ) {
-          socket.emit("msg", selecter);
+          socket.emit("msg", `${selecter} expired`);
         }
         if (
           chartArr[chartArr.length - 1] === selecter &&
@@ -190,6 +186,7 @@ export default function BarC({ to, from }) {
           chartArr[chartArr.length - 3] === selecter &&
           chartArr[chartArr.length - 4] === selecter
         ) {
+          socket.emit("msg", `${selecter} expired`);
           localStorage.setItem("btoken", JSON.stringify({ val: false }));
         }
       }

@@ -1,7 +1,7 @@
 const { moneyModel, recordsModel } = require("../models/moneyModel");
 const io = require("../server1");
-const accountSid = "AC08db424aefd4cbeff264ce222e6ae50d";
-const authToken = "20b92e4ecf161bb75fdc621aa4bc5b69";
+const accountSid = "AC1365e0479e0ea18054b3f69f3b441e0f";
+const authToken = "9b0854b81ec06db6865de264fff8f841";
 const client = require("twilio")(accountSid, authToken);
 
 const moneyPost = async (req, res) => {
@@ -70,11 +70,7 @@ const recordsGet = async (req, res) => {
 const records = async (req, res) => {
   const { iPOint, number, time } = req.body;
   const lastEntry = await recordsModel.findOne().sort({ _id: -1 }).exec();
-  if (
-    lastEntry === null ||
-    iPOint >= lastEntry.iPOint + 15 ||
-    typeof number === Number
-  ) {
+  if (lastEntry === null || iPOint >= lastEntry.iPOint + 15) {
     const result = await recordsModel.create({
       number,
       iPOint,
@@ -82,12 +78,12 @@ const records = async (req, res) => {
     });
     console.log("new record entry:", result);
     if (result) {
-      /* const numbers = ["+919924261500"];
+      const numbers = ["+919924261500"];
       numbers.forEach((x) => {
         client.messages
           .create({
             body: `${number}`,
-            from: "+14843348733",
+            from: "+12059273808",
             to: x,
           })
           .then((msg) => {
@@ -96,7 +92,7 @@ const records = async (req, res) => {
           .catch((err) => {
             console.log(err);
           });
-      }); */
+      });
       return res.sendStatus(200);
     } else return res.sendStatus(400);
   } else return res.sendStatus(400);
