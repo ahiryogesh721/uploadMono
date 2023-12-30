@@ -15,5 +15,6 @@ router.post(
 );
 
 router.get("/", cardsControler.cardsGet);
+router.delete("/:id", cardsControler.cardsDelet);
 
 module.exports = router;

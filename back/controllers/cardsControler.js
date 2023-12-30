@@ -14,7 +14,6 @@ const cardsPost = async (req, res) => {
   const now = new Date().getTime();
   if (game === "g-2ct") {
     const lastEntry1 = await cardsModel3.findOne().sort({ _id: -1 }).exec();
-    const lastEntrysArray = await cardsModel3.find().sort({ _id: -1 }).limit(9);
     if (lastEntry1 === null || undefined || lastEntry1.time + 40000 < now) {
       try {
         let result = await cardsModel3.create({
@@ -46,4 +45,11 @@ const cardsGet = async (req, res) => {
   }
 };
 
-module.exports = { cardsGet, cardsPost };
+const cardsDelet = async (req, res) => {
+  const id = req.params.id;
+  await cardsModel3.deleteOne({ _id: id });
+  let allData = await cardsModel3.find().exec();
+  res.json(allData);
+};
+
+module.exports = { cardsGet, cardsPost, cardsDelet };

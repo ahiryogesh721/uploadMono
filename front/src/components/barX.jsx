@@ -70,71 +70,99 @@ export default function BarC({ to, from }) {
 
   const chek3 = (selecter) => {
     if (selecter === "Player A") {
-      chartArr.reduceRight(
-        (c, cc, i) => {
-          if (c?.i === 3 && c?.elemineter) {
-            const data = {
-              iPOint: chartArr[chartArr.length - 1]?.I,
-              number: `${selecter} inbounde`,
-              time: timestamp,
-            };
-            sendTdata(data);
-            localStorage.setItem("atoken", JSON.stringify({ val: true }));
-          }
-          if (
-            cc.val === selecter &&
-            chartArr[i - 1]?.val === selecter &&
-            chartArr[i - 2]?.val === selecter &&
-            chartArr[i - 3]?.val === selecter
-          ) {
-            return { ...c, elimineter: false };
-          }
-          if (
-            cc.val === selecter &&
-            chartArr[i - 1]?.val === cc.val &&
-            chartArr[i - 2]?.val !== cc.val &&
-            chartArr[i + 1]?.val === cc.val &&
-            chartArr[i + 2]?.val !== cc.val
-          ) {
-            return { i: c.i + 1, elimineter: true };
-          }
-          return c;
-        },
-        { i: 0, elimineter: true }
-      );
+      let atoken = localStorage.getItem("atoken");
+      atoken = JSON.parse(atoken);
+      if (atoken.val === false) {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, "0");
+        const minutes = now.getMinutes().toString().padStart(2, "0");
+        const seconds = now.getSeconds().toString().padStart(2, "0");
+        const timestamp = `${hours}:${minutes}:${seconds}`;
+        chartArr.reduceRight(
+          (c, cc, i) => {
+            if (c?.i === 10) {
+              const data = {
+                iPOint: chartArr[chartArr.length - 1]?.I,
+                number: `${selecter} inbounde`,
+                time: timestamp,
+              };
+              sendTdata(data);
+              localStorage.setItem("atoken", JSON.stringify({ val: true }));
+            }
+            if (
+              cc.val === selecter &&
+              chartArr[i - 1]?.val === selecter &&
+              chartArr[i - 2]?.val === selecter &&
+              chartArr[i - 3]?.val === selecter
+            ) {
+              return { ...c, elimineter: false };
+            }
+            if (
+              cc.val === selecter &&
+              chartArr[i - 1]?.val === cc.val &&
+              chartArr[i - 2]?.val !== cc.val &&
+              chartArr[i + 1]?.val === cc.val &&
+              chartArr[i + 2]?.val !== cc.val &&
+              c?.elimineter
+            ) {
+              if (chartArr[i + 2] === undefined) {
+                return c;
+              }
+              console.log(cc.I);
+              return { i: c.i + 1, elimineter: true };
+            }
+            return c;
+          },
+          { i: 0, elimineter: true }
+        );
+      }
     } else if (selecter === "Player B") {
-      chartArr.reduceRight(
-        (c, cc, i) => {
-          if (c?.i === 3 && c?.elemineter) {
-            const data = {
-              iPOint: chartArr[chartArr.length - 1]?.I,
-              number: `${selecter} inbounde`,
-              time: timestamp,
-            };
-            sendTdata(data);
-            localStorage.setItem("btoken", JSON.stringify({ val: true }));
-          }
-          if (
-            cc.val === selecter &&
-            chartArr[i - 1]?.val === selecter &&
-            chartArr[i - 2]?.val === selecter &&
-            chartArr[i - 3]?.val === selecter
-          ) {
-            return { ...c, elimineter: false };
-          }
-          if (
-            cc.val === selecter &&
-            chartArr[i - 1]?.val === cc.val &&
-            chartArr[i - 2]?.val !== cc.val &&
-            chartArr[i + 1]?.val === cc.val &&
-            chartArr[i + 2]?.val !== cc.val
-          ) {
-            return { i: c.i + 1, elimineter: true };
-          }
-          return c;
-        },
-        { i: 0, elimineter: true }
-      );
+      let btoken = localStorage.getItem("btoken");
+      btoken = JSON.parse(btoken);
+      if (btoken.val === false) {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, "0");
+        const minutes = now.getMinutes().toString().padStart(2, "0");
+        const seconds = now.getSeconds().toString().padStart(2, "0");
+        const timestamp = `${hours}:${minutes}:${seconds}`;
+        chartArr.reduceRight(
+          (c, cc, i) => {
+            if (c?.i === 3) {
+              const data = {
+                iPOint: chartArr[chartArr.length - 1]?.I,
+                number: `${selecter} inbounde`,
+                time: timestamp,
+              };
+              sendTdata(data);
+              localStorage.setItem("btoken", JSON.stringify({ val: true }));
+            }
+            if (
+              cc.val === selecter &&
+              chartArr[i - 1]?.val === selecter &&
+              chartArr[i - 2]?.val === selecter &&
+              chartArr[i - 3]?.val === selecter
+            ) {
+              return { ...c, elimineter: false };
+            }
+            if (
+              cc.val === selecter &&
+              chartArr[i - 1]?.val === cc.val &&
+              chartArr[i - 2]?.val !== cc.val &&
+              chartArr[i + 1]?.val === cc.val &&
+              chartArr[i + 2]?.val !== cc.val &&
+              c?.elimineter
+            ) {
+              if (chartArr[i + 2] === undefined) {
+                console.log("close");
+                return c;
+              }
+              return { i: c.i + 1, elimineter: true };
+            }
+            return c;
+          },
+          { i: 0, elimineter: true }
+        );
+      }
     }
   };
 
@@ -155,16 +183,16 @@ export default function BarC({ to, from }) {
       atoken !== null ? JSON.parse(atoken) : "";
       if (atoken.val) {
         if (
-          chartArr[chartArr.length - 1] === selecter &&
-          chartArr[chartArr.length - 2] === selecter
+          chartArr[chartArr.length - 1]?.val === selecter &&
+          chartArr[chartArr.length - 2]?.val === selecter
         ) {
           socket.emit("msg", `${selecter} place bet after 3rd`);
         }
         if (
-          chartArr[chartArr.length - 1] === selecter &&
-          chartArr[chartArr.length - 2] === selecter &&
-          chartArr[chartArr.length - 3] === selecter &&
-          chartArr[chartArr.length - 4] === selecter
+          chartArr[chartArr.length - 1]?.val === selecter &&
+          chartArr[chartArr.length - 2]?.val === selecter &&
+          chartArr[chartArr.length - 3]?.val === selecter &&
+          chartArr[chartArr.length - 4]?.val === selecter
         ) {
           socket.emit("msg", `${selecter} expired`);
           localStorage.setItem("atoken", JSON.stringify({ val: false }));
@@ -175,16 +203,16 @@ export default function BarC({ to, from }) {
       btoken !== null ? JSON.parse(btoken) : "";
       if (btoken.val) {
         if (
-          chartArr[chartArr.length - 1] === selecter &&
-          chartArr[chartArr.length - 2] === selecter
+          chartArr[chartArr.length - 1]?.val === selecter &&
+          chartArr[chartArr.length - 2]?.val === selecter
         ) {
           socket.emit("msg", `${selecter} expired`);
         }
         if (
-          chartArr[chartArr.length - 1] === selecter &&
-          chartArr[chartArr.length - 2] === selecter &&
-          chartArr[chartArr.length - 3] === selecter &&
-          chartArr[chartArr.length - 4] === selecter
+          chartArr[chartArr.length - 1]?.val === selecter &&
+          chartArr[chartArr.length - 2]?.val === selecter &&
+          chartArr[chartArr.length - 3]?.val === selecter &&
+          chartArr[chartArr.length - 4]?.val === selecter
         ) {
           socket.emit("msg", `${selecter} expired`);
           localStorage.setItem("btoken", JSON.stringify({ val: false }));
@@ -195,10 +223,10 @@ export default function BarC({ to, from }) {
 
   useEffect(() => {
     seter();
-    chek3("Player A");
-    chek3("Player B");
-    caler("Player A");
-    caler("Player B");
+    //chek3("Player A");
+    //chek3("Player B");
+    //caler("Player A");
+    //caler("Player B");
   }, [chartArr.length]);
 
   useEffect(() => {
