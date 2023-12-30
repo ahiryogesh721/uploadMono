@@ -8,8 +8,8 @@ import L2 from "@/components/L2";
 import Ab from "@/components/ab";
 
 export default function Home() {
-  let to = 3200,
-    from = 3300;
+  let to = 100,
+    from = 200;
   return (
     <div>
       <h1>hello</h1>

@@ -10,19 +10,16 @@ const cardsSchema = new Schema({
 
 const cardsModel2 = model("cards-tod", cardsSchema);
 const cardsModel3 = model("cards-2ct", cardsSchema);
-const cardsModel4 = model("cards-2cto", cardsSchema);
-const cardsModel5 = model("cards-mtp", cardsSchema);
+const cardsModel4 = model("cards-bc", cardsSchema);
 
 module.exports = {
   cardsModel2,
   cardsModel3,
   cardsModel4,
-  cardsModel5,
 };
 
 /* 
 g-tod tenpati one day
 g-2ct 2 card ten pati
-g-2cto 2 card ten pati one
-g-mtp muflis tenpati
+g-bc bollowd cosion
 */
