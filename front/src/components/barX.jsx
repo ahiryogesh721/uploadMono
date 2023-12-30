@@ -22,19 +22,19 @@ export default function BarC({ to, from }) {
   const [err, setErr] = useState({});
 
   const data = {
-    labels: show.map((x) => x.I),
-    //labels: show.slice(to, from).map((x) => x.I),
+    //labels: show.map((x) => x.I),
+    labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
-        label: "",
+        /* label: "",
         data: show.map((x) =>
           x.val === "Player A" ? 1 : x.val === "Player B" ? 2 : 0
-        ),
-        /* data: show
+        ), */
+        data: show
           .slice(to, from)
           .map((x) =>
             x.val === "Player A" ? 1 : x.val === "Player B" ? 2 : 0
-          ), */
+          ),
         backgroundColor: "aqua",
         borderColor: "black",
         borderWidth: 1,
@@ -194,11 +194,11 @@ export default function BarC({ to, from }) {
   };
 
   useEffect(() => {
-    seter();
-    chek3("Player A");
-    chek3("Player B");
-    caler("Player A");
-    caler("Player B");
+    //seter();
+    //chek3("Player A");
+    //chek3("Player B");
+    //caler("Player A");
+    //caler("Player B");
   }, [chartArr.length]);
 
   useEffect(() => {
