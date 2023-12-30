@@ -20,13 +20,13 @@ export default function LineM({ to, from, c1, c2 }) {
   const [err, setErr] = useState({});
 
   const data = {
-    //labels: show.map((x) => x.T),
-    labels: show.slice(to, from).map((x) => x.I),
+    labels: show.map((x) => x.I),
+    //labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "",
-        //data: show.map((x) => x.buger),
-        data: show.slice(to, from).map((x) => x.buger),
+        data: show.map((x) => x.buger),
+        //data: show.slice(to, from).map((x) => x.buger),
         backgroundColor: "black",
         borderColor: "red",
         pointBorderColor: "blue",
@@ -77,7 +77,7 @@ export default function LineM({ to, from, c1, c2 }) {
 
   const seter = () => {
     if (show.length >= 10) {
-      let setArr = show.slice(show.length - 200, show.length);
+      let setArr = show.slice(show.length - 100, show.length);
       setShow(setArr);
     }
     if (chartArr.length >= 800) {
@@ -87,13 +87,14 @@ export default function LineM({ to, from, c1, c2 }) {
   };
 
   useEffect(() => {
-    //seter();
+    seter();
   }, [chartArr.length]);
 
   useEffect(() => {
     getData();
   }, []);
 
+  console.log(show);
   return (
     <div>
       {err?.message === undefined ? (

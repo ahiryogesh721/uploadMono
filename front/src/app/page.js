@@ -15,10 +15,10 @@ export default function Home() {
         <BarC to={to} from={from} />
       </div>
       <div id="lineM">
-        <L2 to={to} from={from} />
+        <LineM to={to} from={from} />
       </div>
       <div id="lineM">
-        <LineM to={to} from={from} />
+        <L2 to={to} from={from} />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 const {
   moneyModel,
-  recordsModel5, 
+  recordsModel5,
   recordsModel20,
 } = require("../models/moneyModel");
 const io = require("../server1");
@@ -38,6 +38,7 @@ const moneyPost = async (req, res) => {
             : parseInt(lastEntry?.buger) + parseInt(inout),
       });
       if (result) {
+        console.log(result);
         io.emit("banger", result);
       }
       res.sendStatus(200);
