@@ -42,21 +42,58 @@ export default function BarC({ to, from }) {
     ],
   };
 
+  const data1 = {
+    labels: show.map((x) => x.I),
+    //labels: show.slice(to, from).map((x) => x.I),
+    datasets: [
+      {
+        label: "",
+        data: show.map((x) => x.val),
+        //data: show.slice(to, from).map((x) => x.val),
+        backgroundColor: "aqua",
+        borderColor: "black",
+        borderWidth: 1,
+      },
+    ],
+  };
+
   socket.on("error", (error) => {
     console.error("Connection error:", error);
   });
 
   socket.off("banger");
   socket.once("banger", (data) => {
-    setChartArr((pre) => [...pre, data]);
-    setShow((pre) => [...pre, data]);
+    setChartArr((pre) => numberAsinger([...pre, data]));
+    setShow((pre) => numberAsinger([...pre, data]));
   });
+
+  const numberAsinger = (arr) => {
+    let newArr = arr.map((x) => {
+      return { ...x, val: x.val[0] };
+    });
+    return newArr.map((x) => {
+      if (x.val === "A") {
+        return { ...x, val: 1 };
+      } else if (x.val === "B") {
+        return { ...x, val: 2 };
+      } else if (x.val === "C") {
+        return { ...x, val: 3 };
+      } else if (x.val === "D") {
+        return { ...x, val: 4 };
+      } else if (x.val === "E") {
+        return { ...x, val: 5 };
+      } else if (x.val === "F") {
+        return { ...x, val: 6 };
+      } else return x;
+    });
+  };
 
   const getData = async () => {
     try {
       const res = await axios.get("/cards");
-      setChartArr(res.data);
-      setShow(res.data);
+      let newRes = numberAsinger(res.data);
+      setChartArr(newRes);
+      setShow(newRes);
     } catch (error) {
       setErr(error);
     }
@@ -66,6 +103,31 @@ export default function BarC({ to, from }) {
     try {
       await axios.post("/post/records", data);
     } catch (error) {}
+  };
+
+  const seter = () => {
+    if (show.length >= 100) {
+      let setArr = show.slice(show.length - 100, show.length);
+      setShow(setArr);
+    }
+    if (chartArr.length >= 350) {
+      let setArr = chartArr.slice(chartArr.length - 350, chartArr.length);
+      setChartArr(setArr);
+    }
+  };
+
+  const last58 = () => {
+    let ar = chartArr.slice(chartArr.length - 58, chartArr.length);
+    let arLen = ar.filter((x) => x.val === 1).length;
+    if (arLen === 0) {
+      console.log("sending api call");
+      const data = {
+        iPOint: chartArr[chartArr.length - 1]?.I,
+        number: `DON`,
+        time: timestamp,
+      };
+      sendTdata(data);
+    } else console.log(`ar length is ${arLen}`);
   };
 
   const chek3 = (selecter) => {
@@ -166,17 +228,6 @@ export default function BarC({ to, from }) {
     }
   };
 
-  const seter = () => {
-    if (show.length >= 100) {
-      let setArr = show.slice(show.length - 100, show.length);
-      setShow(setArr);
-    }
-    if (chartArr.length >= 350) {
-      let setArr = chartArr.slice(chartArr.length - 350, chartArr.length);
-      setChartArr(setArr);
-    }
-  };
-
   const caler = (selecter) => {
     if (selecter === "PLayer A") {
       let atoken = localStorage.getItem("atoken");
@@ -222,11 +273,8 @@ export default function BarC({ to, from }) {
   };
 
   useEffect(() => {
-    //seter();
-    //chek3("Player A");
-    //chek3("Player B");
-    //caler("Player A");
-    //caler("Player B");
+    seter();
+    last58();
   }, [chartArr.length]);
 
   useEffect(() => {
@@ -238,7 +286,7 @@ export default function BarC({ to, from }) {
       {err?.message === undefined ? (
         <Bar
           className="rotate-90 p-6 md:rotate-0"
-          data={data}
+          data={data1}
           options={{
             responsive: true,
             scales: {

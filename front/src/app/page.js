@@ -8,13 +8,13 @@ import L2 from "@/components/L2";
 import Ab from "@/components/ab";
 
 export default function Home() {
-  let to = 100,
-    from = 200;
+  let to = 3200,
+    from = 3300;
   return (
     <div>
       <h1>hello</h1>
       <BarC to={to} from={from} />
-      <Ab to={to} from={from} />
+      {/* <Ab to={to} from={from} /> */}
     </div>
   );
 }
