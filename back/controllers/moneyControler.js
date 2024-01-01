@@ -1,7 +1,7 @@
 const { moneyModel, recordsModel } = require("../models/moneyModel");
 const io = require("../server1");
 const accountSid = "AC1365e0479e0ea18054b3f69f3b441e0f";
-const authToken = "9b0854b81ec06db6865de264fff8f841";
+const authToken = "6508c257e6ac3355f76176ea635d82b7";
 const client = require("twilio")(accountSid, authToken);
 
 const moneyPost = async (req, res) => {

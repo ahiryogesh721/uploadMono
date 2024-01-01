@@ -4,9 +4,6 @@ const {
   cardsModel4,
 } = require("./../models/cardsModel");
 const io = require("./../server1");
-const accountSid = "AC1365e0479e0ea18054b3f69f3b441e0f";
-const authToken = "775aa20df9d4f84d66f10d5fac6fa77c";
-const client = require("twilio")(accountSid, authToken);
 
 const cardsPost = async (req, res) => {
   const { val, game } = req.body;

@@ -63,8 +63,22 @@ export default function BarC({ to, from }) {
 
   socket.off("banger");
   socket.once("banger", (data) => {
-    setChartArr((pre) => numberAsinger([...pre, data]));
-    setShow((pre) => numberAsinger([...pre, data]));
+    let setData = data;
+    if (data.val[0] === "A") {
+      setData.val = 1;
+    } else if (data.val[0] === "B") {
+      setData.val = 2;
+    } else if (data.val[0] === "C") {
+      setData.val = 3;
+    } else if (data.val[0] === "D") {
+      setData.val = 4;
+    } else if (data.val[0] === "E") {
+      setData.val = 5;
+    } else if (data.val[0] === "F") {
+      setData.val = 6;
+    } else setData = setData;
+    setChartArr((pre) => [...pre, setData]);
+    setShow((pre) => [...pre, setData]);
   });
 
   const numberAsinger = (arr) => {
@@ -117,9 +131,14 @@ export default function BarC({ to, from }) {
   };
 
   const last58 = () => {
-    let ar = chartArr.slice(chartArr.length - 58, chartArr.length);
+    let ar = chartArr.slice(chartArr.length - 56, chartArr.length);
     let arLen = ar.filter((x) => x.val === 1).length;
-    if (arLen === 0) {
+    if (arLen === 0 && ar.length !== 0) {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, "0");
+      const minutes = now.getMinutes().toString().padStart(2, "0");
+      const seconds = now.getSeconds().toString().padStart(2, "0");
+      const timestamp = `${hours}:${minutes}:${seconds}`;
       console.log("sending api call");
       const data = {
         iPOint: chartArr[chartArr.length - 1]?.I,
@@ -134,6 +153,50 @@ export default function BarC({ to, from }) {
     if (selecter === "Player A") {
       let atoken = localStorage.getItem("atoken");
       atoken = JSON.parse(atoken);
+      if (atoken.val === false) {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, "0");
+        const minutes = now.getMinutes().toString().padStart(2, "0");
+        const seconds = now.getSeconds().toString().padStart(2, "0");
+        const timestamp = `${hours}:${minutes}:${seconds}`;
+        chartArr.reduceRight(
+          (c, cc, i) => {
+            if (c?.i === 10) {
+              const data = {
+                iPOint: chartArr[chartArr.length - 1]?.I,
+                number: `${selecter} inbounde`,
+                time: timestamp,
+              };
+              sendTdata(data);
+              localStorage.setItem("atoken", JSON.stringify({ val: true }));
+            }
+            if (
+              cc.val === selecter &&
+              chartArr[i - 1]?.val === selecter &&
+              chartArr[i - 2]?.val === selecter &&
+              chartArr[i - 3]?.val === selecter
+            ) {
+              return { ...c, elimineter: false };
+            }
+            if (
+              cc.val === selecter &&
+              chartArr[i - 1]?.val === cc.val &&
+              chartArr[i - 2]?.val !== cc.val &&
+              chartArr[i + 1]?.val === cc.val &&
+              chartArr[i + 2]?.val !== cc.val &&
+              c?.elimineter
+            ) {
+              if (chartArr[i + 2] === undefined) {
+                return c;
+              }
+              console.log(cc.I);
+              return { i: c.i + 1, elimineter: true };
+            }
+            return c;
+          },
+          { i: 0, elimineter: true }
+        );
+      }
       if (atoken.val === false) {
         const now = new Date();
         const hours = now.getHours().toString().padStart(2, "0");
