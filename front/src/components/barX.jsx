@@ -130,13 +130,13 @@ export default function BarC({ to, from }) {
       if (x.val === "A") {
         return { ...x, val: 1 };
       } else if (x.val === "B") {
-        return { ...x, val: 2 };
+        return { ...x, val: 1 };
       } else if (x.val === "C") {
         return { ...x, val: 1 };
       } else if (x.val === "D") {
         return { ...x, val: 1 };
       } else if (x.val === "E") {
-        return { ...x, val: 1 };
+        return { ...x, val: 2 };
       } else if (x.val === "F") {
         return { ...x, val: 1 };
       } else return x;
@@ -147,8 +147,8 @@ export default function BarC({ to, from }) {
     try {
       const res = await axios.get("/cards");
       let newRes = numberAsinger(con2(res.data));
-      setChartArr(res.data);
-      setShow(res.data);
+      setChartArr(newRes);
+      setShow(newRes);
     } catch (error) {
       setErr(error);
     }
@@ -385,12 +385,13 @@ export default function BarC({ to, from }) {
     getData();
   }, []);
 
+  console.log(show);
   return (
     <div>
       {err?.message === undefined ? (
         <Bar
           className="rotate-90 p-6 md:rotate-0"
-          data={data}
+          data={data1}
           options={{
             responsive: true,
             scales: {
