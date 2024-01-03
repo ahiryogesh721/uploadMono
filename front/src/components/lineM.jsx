@@ -20,13 +20,13 @@ export default function LineM({ to, from, c1, c2 }) {
   const [err, setErr] = useState({});
 
   const data = {
-    labels: show.map((x) => x.I),
-    //labels: show.slice(to, from).map((x) => x.I),
+    //labels: show.map((x) => x.I),
+    labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "",
-        data: show.map((x) => x.buger),
-        //data: show.slice(to, from).map((x) => x.buger),
+        //data: show.map((x) => x.buger),
+        data: show.slice(to, from).map((x) => x.buger),
         backgroundColor: "black",
         borderColor: "red",
         pointBorderColor: "blue",
@@ -87,7 +87,7 @@ export default function LineM({ to, from, c1, c2 }) {
   };
 
   useEffect(() => {
-    seter();
+    //seter();
   }, [chartArr.length]);
 
   useEffect(() => {
