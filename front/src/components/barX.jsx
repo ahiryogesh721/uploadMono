@@ -26,8 +26,8 @@ export default function BarC({ to, from }) {
     labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
-        /* label: "",
-        data: show.map((x) =>
+        label: "",
+        /* data: show.map((x) =>
           x.val === "Player A" ? 1 : x.val === "Player B" ? 2 : 0
         ), */
         data: show
@@ -43,16 +43,33 @@ export default function BarC({ to, from }) {
   };
 
   const data1 = {
-    labels: show.map((x) => x.I),
-    //labels: show.slice(to, from).map((x) => x.I),
+    //labels: show.map((x) => x.I),
+    labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "",
-        data: show.map((x) => x.val),
-        //data: show.slice(to, from).map((x) => x.val),
+        //data: show.map((x) => x.val),
+        data: show.slice(to, from).map((x) => x.val),
         backgroundColor: "aqua",
         borderColor: "black",
         borderWidth: 1,
+      },
+    ],
+  };
+
+  const dataL = {
+    //labels: show.map((x) => x.I),
+    labels: show.slice(to, from).map((x) => x.I),
+    datasets: [
+      {
+        label: "2",
+        //data: show.map((x) => x.D3),
+        data: show.slice(to, from).map((x) => x.D2),
+        backgroundColor: "pink",
+        borderColor: "plink",
+        pointBorderColor: "black",
+        fill: true,
+        tension: 0.1,
       },
     ],
   };
@@ -81,6 +98,30 @@ export default function BarC({ to, from }) {
     setShow((pre) => [...pre, setData]);
   });
 
+  function con2(arr) {
+    return arr.map((x, I) => {
+      if (x.val === 2 && x.I > 20) {
+        let finder = true;
+        let i = 1;
+        while (finder) {
+          let indexOfBreker = I - i;
+          if (x.val === 2) {
+            finder = false;
+            return {
+              ...x,
+              D2: i,
+            };
+          }
+          i++;
+        }
+      }
+      return {
+        ...x,
+        D2: 0,
+      };
+    });
+  }
+
   const numberAsinger = (arr) => {
     let newArr = arr.map((x) => {
       return { ...x, val: x.val[0] };
@@ -91,13 +132,13 @@ export default function BarC({ to, from }) {
       } else if (x.val === "B") {
         return { ...x, val: 2 };
       } else if (x.val === "C") {
-        return { ...x, val: 3 };
+        return { ...x, val: 1 };
       } else if (x.val === "D") {
-        return { ...x, val: 4 };
+        return { ...x, val: 1 };
       } else if (x.val === "E") {
-        return { ...x, val: 5 };
+        return { ...x, val: 1 };
       } else if (x.val === "F") {
-        return { ...x, val: 6 };
+        return { ...x, val: 1 };
       } else return x;
     });
   };
@@ -105,9 +146,9 @@ export default function BarC({ to, from }) {
   const getData = async () => {
     try {
       const res = await axios.get("/cards");
-      let newRes = numberAsinger(res.data);
-      setChartArr(newRes);
-      setShow(newRes);
+      let newRes = numberAsinger(con2(res.data));
+      setChartArr(res.data);
+      setShow(res.data);
     } catch (error) {
       setErr(error);
     }
@@ -336,8 +377,8 @@ export default function BarC({ to, from }) {
   };
 
   useEffect(() => {
-    seter();
-    last58();
+    //seter();
+    //last58();
   }, [chartArr.length]);
 
   useEffect(() => {
@@ -349,7 +390,7 @@ export default function BarC({ to, from }) {
       {err?.message === undefined ? (
         <Bar
           className="rotate-90 p-6 md:rotate-0"
-          data={data1}
+          data={data}
           options={{
             responsive: true,
             scales: {
