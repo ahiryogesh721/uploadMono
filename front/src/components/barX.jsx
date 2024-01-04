@@ -22,19 +22,35 @@ export default function BarC({ to, from }) {
   const [err, setErr] = useState({});
 
   const data = {
-    //labels: show.map((x) => x.I),
-    labels: show.slice(to, from).map((x) => x.I),
+    labels: show.map((x) => {
+      function millisecondsToHMS(milliseconds) {
+        var seconds = Math.floor(milliseconds / 1000);
+        var hours = Math.floor(seconds / 3600);
+        var minutes = Math.floor((seconds % 3600) / 60);
+        var remainingSeconds = Math.floor(seconds % 60);
+
+        // Add leading zeros if necessary
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        remainingSeconds =
+          remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds;
+
+        return "==>>" + hours + ":" + minutes + ":" + remainingSeconds;
+      }
+      return x.I; //millisecondsToHMS(x.time);
+    }),
+    //labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "",
-        /* data: show.map((x) =>
+        data: show.map((x) =>
           x.val === "Player A" ? 1 : x.val === "Player B" ? 2 : 0
-        ), */
-        data: show
+        ),
+        /* data: show
           .slice(to, from)
           .map((x) =>
             x.val === "Player A" ? 1 : x.val === "Player B" ? 2 : 0
-          ),
+          ), */
         backgroundColor: "aqua",
         borderColor: "black",
         borderWidth: 1,
@@ -53,23 +69,6 @@ export default function BarC({ to, from }) {
         backgroundColor: "aqua",
         borderColor: "black",
         borderWidth: 1,
-      },
-    ],
-  };
-
-  const dataL = {
-    //labels: show.map((x) => x.I),
-    labels: show.slice(to, from).map((x) => x.I),
-    datasets: [
-      {
-        label: "2",
-        //data: show.map((x) => x.D3),
-        data: show.slice(to, from).map((x) => x.D2),
-        backgroundColor: "pink",
-        borderColor: "plink",
-        pointBorderColor: "black",
-        fill: true,
-        tension: 0.1,
       },
     ],
   };
@@ -94,8 +93,8 @@ export default function BarC({ to, from }) {
     } else if (data.val[0] === "F") {
       setData.val = 6;
     } else setData = setData;
-    setChartArr((pre) => [...pre, setData]);
-    setShow((pre) => [...pre, setData]);
+    setChartArr((pre) => [...pre, data]);
+    setShow((pre) => [...pre, data]);
   });
 
   function con2(arr) {
@@ -376,8 +375,30 @@ export default function BarC({ to, from }) {
     }
   };
 
+  const lChek = () => {
+    let ar = chartArr.slice(chartArr.length - 11, chartArr.length - 1);
+    let A = ar.filter((x) => x.val === "Player A");
+    let B = ar.filter((x) => x.val === "Player B");
+    console.log(`A:${A.length}||B:${B.length}`);
+    if (A.length === 2 || B.length === 2) {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, "0");
+      const minutes = now.getMinutes().toString().padStart(2, "0");
+      const seconds = now.getSeconds().toString().padStart(2, "0");
+      const timestamp = `${hours}:${minutes}:${seconds}`;
+
+      const data = {
+        iPOint: chartArr[chartArr.length - 1]?.I,
+        number: A.length <= 2 ? "A" : "B",
+        time: timestamp,
+      };
+      sendTdata(data);
+    }
+  };
+
   useEffect(() => {
-    //seter();
+    seter();
+    lChek();
     //last58();
   }, [chartArr.length]);
 
@@ -389,7 +410,6 @@ export default function BarC({ to, from }) {
     <div>
       {err?.message === undefined ? (
         <Bar
-          className="rotate-90 p-6 md:rotate-0"
           data={data}
           options={{
             responsive: true,

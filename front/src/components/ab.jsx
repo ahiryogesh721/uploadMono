@@ -22,21 +22,21 @@ export default function Ab({ to, from }) {
   const [err, setErr] = useState({});
 
   const data = {
-    //labels: show.map((x) => x.I),
-    labels: show.slice(to, from).map((x) => x.I),
+    labels: show.map((x) => x.I),
+    //labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "a",
-        //data: show.map((x) => x.a10),
-        data: show.slice(to, from).map((x) => x.a10),
+        data: show.map((x) => x.a10),
+        //data: show.slice(to, from).map((x) => x.a10),
         backgroundColor: "blue",
         borderColor: "black",
         borderWidth: 1,
       },
       {
         label: "b",
-        //data: show.map((x) => x.b10),
-        data: show.slice(to, from).map((x) => x.b10),
+        data: show.map((x) => x.b10),
+        //data: show.slice(to, from).map((x) => x.b10),
         backgroundColor: "red",
         borderColor: "black",
         borderWidth: 1,
@@ -135,8 +135,34 @@ export default function Ab({ to, from }) {
     }
   };
 
+  const sendTdata = async (data) => {
+    try {
+      await axios.post("/post/records", data);
+    } catch (error) {}
+  };
+
+  const lChek = () => {
+    const lastEntry = chartArr[chartArr.length - 1];
+    console.log(`A:${lastEntry?.a10}||B:${lastEntry?.b10}`);
+    if (lastEntry?.a10 <= 2 || lastEntry?.b10 <= 2) {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, "0");
+      const minutes = now.getMinutes().toString().padStart(2, "0");
+      const seconds = now.getSeconds().toString().padStart(2, "0");
+      const timestamp = `${hours}:${minutes}:${seconds}`;
+
+      const data = {
+        iPOint: lastEntry.I,
+        number: lastEntry?.a10 <= 2 ? "A" : "B",
+        time: timestamp,
+      };
+      sendTdata(data);
+    }
+  };
+
   useEffect(() => {
     //seter();
+    //lChek();
   }, [chartArr.length]);
 
   useEffect(() => {
