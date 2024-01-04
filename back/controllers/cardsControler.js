@@ -72,7 +72,7 @@ const cardsPost = async (req, res) => {
 
 const cardsGet = async (req, res) => {
   try {
-    const allCards = await cardsModel3.find().exec();
+    const allCards = await cardsModel4.find().exec();
     res.json(allCards);
   } catch (error) {
     console.log("could not retry data from database");

@@ -5,8 +5,8 @@ import BarC from "@/components/barX";
 import Ab from "@/components/ab";
 
 export default function Home() {
-  let to = 2000,
-    from = 2100;
+  let to = 0,
+    from = 100;
   return (
     <div>
       <h1>hello</h1>
