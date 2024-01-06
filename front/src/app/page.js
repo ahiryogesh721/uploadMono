@@ -5,13 +5,13 @@ import BarC from "@/components/barX";
 import Ab from "@/components/ab";
 
 export default function Home() {
-  let to = 0,
-    from = 100;
+  let to = 1100,
+    from = 1200;
   return (
     <div>
       <h1>hello</h1>
       <BarC to={to} from={from} />
-      {/* <Ab to={to} from={from} /> */}
+      <Ab to={to} from={from} />
     </div>
   );
 }

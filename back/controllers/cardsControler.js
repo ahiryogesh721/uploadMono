@@ -11,7 +11,7 @@ const cardsPost = async (req, res) => {
   if (game === "g-2ct") {
     const lastEntry1 = await cardsModel3.findOne().sort({ _id: -1 }).exec();
     const lastEntrysArray = await cardsModel3.find().sort({ _id: -1 }).limit(9);
-    if (lastEntry1 === null || undefined || lastEntry1.time + 40000 < now) {
+    if (lastEntry1 === null || undefined || lastEntry1.time + 1000 < now) {
       try {
         let result = await cardsModel3.create({
           I: lastEntry1 === null ? 1 : lastEntry1.I + 1,
@@ -72,7 +72,7 @@ const cardsPost = async (req, res) => {
 
 const cardsGet = async (req, res) => {
   try {
-    const allCards = await cardsModel4.find().exec();
+    const allCards = await cardsModel3.find().exec();
     res.json(allCards);
   } catch (error) {
     console.log("could not retry data from database");
