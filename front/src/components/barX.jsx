@@ -22,35 +22,19 @@ export default function BarC({ to, from }) {
   const [err, setErr] = useState({});
 
   const data = {
-    /* labels: show.map((x) => {
-      function millisecondsToHMS(milliseconds) {
-        var seconds = Math.floor(milliseconds / 1000);
-        var hours = Math.floor(seconds / 3600);
-        var minutes = Math.floor((seconds % 3600) / 60);
-        var remainingSeconds = Math.floor(seconds % 60);
-
-        // Add leading zeros if necessary
-        hours = hours < 10 ? "0" + hours : hours;
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        remainingSeconds =
-          remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds;
-
-        return "==>>" + hours + ":" + minutes + ":" + remainingSeconds;
-      }
-      return x.I; //millisecondsToHMS(x.time);
-    }), */
-    labels: show.slice(to, from).map((x) => x.I),
+    labels: show.map((x) => x.I),
+    //labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "",
-        /* data: show.map((x) =>
+        data: show.map((x) =>
           x.val === "Player A" ? 1 : x.val === "Player B" ? 2 : 0
-        ), */
-        data: show
+        ),
+        /* data: show
           .slice(to, from)
           .map((x) =>
             x.val === "Player A" ? 1 : x.val === "Player B" ? 2 : 0
-          ),
+          ), */
         backgroundColor: "aqua",
         borderColor: "black",
         borderWidth: 1,
@@ -171,15 +155,21 @@ export default function BarC({ to, from }) {
   };
 
   const l5 = () => {
-    if (
-      chartArr[chartArr.length - 1]?.val ===
-        chartArr[chartArr.length - 2]?.val &&
-      chartArr[chartArr.length - 2]?.val ===
-        chartArr[chartArr.length - 3]?.val &&
-      chartArr[chartArr.length - 3]?.val ===
-        chartArr[chartArr.length - 4]?.val &&
-      chartArr[chartArr.length - 4]?.val !== chartArr[chartArr.length - 5]?.val
-    ) {
+    let li1v = chartArr[chartArr.length - 1]?.val;
+    let li2v = chartArr[chartArr.length - 2]?.val;
+    let li3v = chartArr[chartArr.length - 3]?.val;
+    let li4v = chartArr[chartArr.length - 4]?.val;
+    let li5v = chartArr[chartArr.length - 5]?.val;
+
+    let con1 = li1v === li2v;
+    let con2 = li2v === li3v;
+    let con3 = li3v === li4v;
+    let con4 = li4v !== li5v;
+
+    console.log(li1v, li2v, li3v, li4v, li5v);
+    console.log(con1, con2, con3, con4);
+
+    if (con1 && con2 && con3 && con4) {
       const now = new Date();
       const hours = now.getHours().toString().padStart(2, "0");
       const minutes = now.getMinutes().toString().padStart(2, "0");
@@ -200,43 +190,79 @@ export default function BarC({ to, from }) {
     if (token !== null) {
       token = JSON.stringify(token);
       if (token.val) {
+        let li1v = chartArr[chartArr.length - 1]?.val;
+        let li2v = chartArr[chartArr.length - 2]?.val;
+        let li3v = chartArr[chartArr.length - 3]?.val;
+        let li4v = chartArr[chartArr.length - 4]?.val;
+        let li5v = chartArr[chartArr.length - 5]?.val;
+        let li6v = chartArr[chartArr.length - 6]?.val;
+
         if (
-          chartArr[chartArr.length - 1]?.val ===
-            chartArr[chartArr.length - 2]?.val &&
-          chartArr[chartArr.length - 2]?.val ===
-            chartArr[chartArr.length - 3]?.val &&
-          chartArr[chartArr.length - 3]?.val ===
-            chartArr[chartArr.length - 4]?.val &&
-          chartArr[chartArr.length - 4]?.val ===
-            chartArr[chartArr.length - 5]?.val &&
-          chartArr[chartArr.length - 6]?.val ===
-            chartArr[chartArr.length - 6]?.val
+          li1v === li2v &&
+          li2v === li3v &&
+          li3v === li4v &&
+          li4v === li5v &&
+          li5v === li6v
         ) {
           socket.emit("msg", "pass");
-          localStorage.setItem("c6", JSON.stringify({ val: false }));
-        } else if (
-          chartArr[chartArr.length - 1]?.val ===
-            chartArr[chartArr.length - 2]?.val &&
-          chartArr[chartArr.length - 2]?.val ===
-            chartArr[chartArr.length - 3]?.val &&
-          chartArr[chartArr.length - 3]?.val ===
-            chartArr[chartArr.length - 4]?.val &&
-          chartArr[chartArr.length - 4]?.val ===
-            chartArr[chartArr.length - 5]?.val &&
-          chartArr[chartArr.length - 5]?.val !==
-            chartArr[chartArr.length - 6]?.val
-        ) {
-          socket.emit("msg", "faill");
           localStorage.setItem("c6", JSON.stringify({ val: false }));
         }
       }
     }
   };
 
+  const c10 = () => {
+    let ar = chartArr.slice(chartArr.length - 11, chartArr.length - 1);
+    let abVal = ar.reduce(
+      (c, cc) => {
+        if (cc.val === "Player A") {
+          return { ...c, a: c.a + 1 };
+        } else if (cc.val == "Player B") {
+          return { ...c, b: c.b + 1 };
+        }
+        return c;
+      },
+      { a: 0, b: 0 }
+    );
+    let token = localStorage.getItem("c10");
+    if (token !== null) {
+      token = JSON.parse(token);
+      let currentDate = new Date();
+      let hours = currentDate.getHours();
+      let minutes = currentDate.getMinutes();
+      let seconds = currentDate.getSeconds();
+      hours = hours < 10 ? "0" + hours : hours;
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      let timestamp = hours + ":" + minutes + ":" + seconds;
+      if (token.a && abVal.a <= 2) {
+        const data = {
+          iPOint: chartArr[chartArr.length - 1]?.I,
+          number: "A",
+          time: timestamp,
+        };
+        sendTdata(data);
+        localStorage.setItem("c10", JSON.stringify({ ...token, a: false }));
+      } else if (token.b && abVal.b <= 2) {
+        const data = {
+          iPOint: chartArr[chartArr.length - 1]?.I,
+          number: "B",
+          time: timestamp,
+        };
+        sendTdata(data);
+        localStorage.setItem("c10", JSON.stringify({ ...token, b: false }));
+      } else if (token.a === false && abVal.a >= 5) {
+        localStorage.setItem("c10", JSON.stringify({ ...token, a: true }));
+      } else if (token.b === false && abVal.b >= 5) {
+        localStorage.setItem("c10", JSON.stringify({ ...token, b: true }));
+      }
+    }
+  };
+
   useEffect(() => {
-    //seter();
-    l5();
-    caler();
+    seter();
+    c10();
   }, [chartArr.length]);
 
   useEffect(() => {

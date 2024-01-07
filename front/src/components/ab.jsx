@@ -21,22 +21,22 @@ export default function Ab({ to, from }) {
   const [show, setShow] = useState([]);
   const [err, setErr] = useState({});
 
-  const data = {
-    //labels: show.map((x) => x.I),
-    labels: show.slice(to, from).map((x) => x.I),
+  const data10 = {
+    labels: show.map((x) => x.I),
+    //labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "a",
-        //data: show.map((x) => x.a10),
-        data: show.slice(to, from).map((x) => x.a20),
+        data: show.map((x) => x.a15),
+        //data: show.slice(to, from).map((x) => x.a10),
         backgroundColor: "blue",
         borderColor: "black",
         borderWidth: 1,
       },
       {
         label: "b",
-        //data: show.map((x) => x.b10),
-        data: show.slice(to, from).map((x) => x.b20),
+        data: show.map((x) => x.b15),
+        //data: show.slice(to, from).map((x) => x.b10),
         backgroundColor: "red",
         borderColor: "black",
         borderWidth: 1,
@@ -136,7 +136,7 @@ export default function Ab({ to, from }) {
   };
 
   useEffect(() => {
-    //seter();
+    seter();
   }, [chartArr.length]);
 
   useEffect(() => {
@@ -145,17 +145,20 @@ export default function Ab({ to, from }) {
 
   return (
     <div>
-      <Bar
-        data={data}
-        options={{
-          responsive: true,
-          scales: {
-            y: {
-              display: true,
+      <div>
+        10
+        <Bar
+          data={data10}
+          options={{
+            responsive: true,
+            scales: {
+              y: {
+                display: true,
+              },
             },
-          },
-        }}
-      />
+          }}
+        />
+      </div>
     </div>
   );
 }
