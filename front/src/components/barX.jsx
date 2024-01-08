@@ -224,6 +224,7 @@ export default function BarC({ to, from }) {
       },
       { a: 0, b: 0 }
     );
+    console.log(abVal);
     let token = localStorage.getItem("c10");
     if (token !== null) {
       token = JSON.parse(token);
@@ -236,7 +237,7 @@ export default function BarC({ to, from }) {
       seconds = seconds < 10 ? "0" + seconds : seconds;
 
       let timestamp = hours + ":" + minutes + ":" + seconds;
-      if (token.a && abVal.a <= 2) {
+      if (token.a && abVal.a <= 2 && ar.length !== 0) {
         const data = {
           iPOint: chartArr[chartArr.length - 1]?.I,
           number: "A",
@@ -244,7 +245,14 @@ export default function BarC({ to, from }) {
         };
         sendTdata(data);
         localStorage.setItem("c10", JSON.stringify({ ...token, a: false }));
-      } else if (token.b && abVal.b <= 2) {
+        localStorage.setItem(
+          "TFS",
+          JSON.stringify({
+            target: "Player A",
+            curentWin: chartArr[chartArr.length - 1]?.val,
+          })
+        );
+      } else if (token.b && abVal.b <= 2 && ar.length !== 0) {
         const data = {
           iPOint: chartArr[chartArr.length - 1]?.I,
           number: "B",
@@ -252,17 +260,50 @@ export default function BarC({ to, from }) {
         };
         sendTdata(data);
         localStorage.setItem("c10", JSON.stringify({ ...token, b: false }));
-      } else if (token.a === false && abVal.a >= 5) {
+        localStorage.setItem(
+          "TFS",
+          JSON.stringify({
+            target: "Player B",
+            curentWin: chartArr[chartArr.length - 1]?.val,
+          })
+        );
+      } else if (token.a === false && abVal.a >= 5 && ar.length !== 0) {
         localStorage.setItem("c10", JSON.stringify({ ...token, a: true }));
-      } else if (token.b === false && abVal.b >= 5) {
+      } else if (token.b === false && abVal.b >= 5 && ar.length !== 0) {
         localStorage.setItem("c10", JSON.stringify({ ...token, b: true }));
       }
+    }
+  };
+
+  const statusSeter = () => {
+    let token = localStorage.getItem("TFS");
+
+    const watcher = () => {
+      if (token.target === chartArr[chartArr.length - 2]?.val) {
+        chartArr[chartArr.length - 1]?.val === token.target
+          ? socket.emit("msg", "pass")
+          : socket.emit("msg", "fails");
+        localStorage.removeItem("TFS");
+      }
+    };
+
+    const skiper = () => {
+      let alows = false;
+      if (chartArr[chartArr.length - 1]?.val !== token.target) {
+        alows = true;
+      }
+      alows ? watcher() : "";
+    };
+    if (token !== null) {
+      token = JSON.parse(token);
+      token.target === token.curentWin ? skiper() : watcher();
     }
   };
 
   useEffect(() => {
     seter();
     c10();
+    statusSeter();
   }, [chartArr.length]);
 
   useEffect(() => {

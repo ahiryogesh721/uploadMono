@@ -11,7 +11,7 @@ const cardsPost = async (req, res) => {
   if (game === "g-2ct") {
     const lastEntry1 = await cardsModel3.findOne().sort({ _id: -1 }).exec();
     const lastEntrysArray = await cardsModel3.find().sort({ _id: -1 }).limit(9);
-    if (lastEntry1 === null || undefined || lastEntry1.time + 1000 < now) {
+    if (lastEntry1 === null || undefined || lastEntry1.time + 40000 < now) {
       try {
         let result = await cardsModel3.create({
           I: lastEntry1 === null ? 1 : lastEntry1.I + 1,

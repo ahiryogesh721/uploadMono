@@ -27,7 +27,7 @@ export default function Ab({ to, from }) {
     datasets: [
       {
         label: "a",
-        data: show.map((x) => x.a15),
+        data: show.map((x) => x.a10),
         //data: show.slice(to, from).map((x) => x.a10),
         backgroundColor: "blue",
         borderColor: "black",
@@ -35,7 +35,7 @@ export default function Ab({ to, from }) {
       },
       {
         label: "b",
-        data: show.map((x) => x.b15),
+        data: show.map((x) => x.b10),
         //data: show.slice(to, from).map((x) => x.b10),
         backgroundColor: "red",
         borderColor: "black",

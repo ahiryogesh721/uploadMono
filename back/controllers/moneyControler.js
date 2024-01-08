@@ -1,7 +1,7 @@
 const { moneyModel, recordsModel } = require("../models/moneyModel");
 const io = require("../server1");
-const accountSid = "AC1365e0479e0ea18054b3f69f3b441e0f";
-const authToken = "da574774c8571c2e7711ddf5f140c0cf";
+const accountSid = "AC658bd740e56f3c0983c3756810410b3f";
+const authToken = "a6c67261cd4e24caa623420f3f2d8d80";
 const client = require("twilio")(accountSid, authToken);
 
 const moneyPost = async (req, res) => {
@@ -34,7 +34,7 @@ const moneyPost = async (req, res) => {
             : parseInt(lastEntry?.buger) + parseInt(inout),
       });
       if (result) {
-        io.emit("banger", result);
+        //io.emit("banger", result);
       }
       res.sendStatus(200);
     } catch (error) {
@@ -70,7 +70,7 @@ const recordsGet = async (req, res) => {
 const records = async (req, res) => {
   const { iPOint, number, time } = req.body;
   const lastEntry = await recordsModel.findOne().sort({ _id: -1 }).exec();
-  if (lastEntry === null || iPOint >= lastEntry.iPOint + 10) {
+  if (lastEntry === null || iPOint >= lastEntry.iPOint + 1) {
     const result = await recordsModel.create({
       number,
       iPOint,
@@ -83,7 +83,7 @@ const records = async (req, res) => {
         client.messages
           .create({
             body: `${number}`,
-            from: "+12059273808",
+            from: "+12015590389",
             to: x,
           })
           .then((msg) => {
