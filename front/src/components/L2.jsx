@@ -259,19 +259,14 @@ export default function L1({ to, from, c1, c2 }) {
     let box2 = [];
     let alow1 = true;
     chartArr.forEach((x, i) => {
-      if (
-        alow1 &&
-        x.D2 === -1 &&
-        chartArr[i - 1]?.D2 === -1 &&
-        chartArr[i - 2]?.D2 === -1 /* &&
-        chartArr[i - 3]?.D2 === -1 */
-      ) {
+      if (alow1 && x.D2 > 0) {
         let obj = {};
         let condition = true;
         let I = 1;
         obj.IP = x.I;
         obj.MS = [];
         while (condition) {
+          console.log(x.I, I);
           let nextInVal = chartArr[i + I];
           if (nextInVal?.D2 === -1) {
             obj.MS.push({ i: nextInVal?.I, val: nextInVal?.D2 });
@@ -288,20 +283,15 @@ export default function L1({ to, from, c1, c2 }) {
     });
     console.log(box2);
 
-    let alow3 = true;
-    let box3 = [];
-    box2.forEach((x, i) => {
-      if (x.MS.length !== 0 && alow3) {
-        box3.push({
-          i: x.IP,
-          val: `${box2[i + 1]?.MS.length}`,
-        });
-        alow3 = false;
-      } else if (x.MS.length === 0) {
-        alow3 = true;
+    /* box2.forEach((x, i) => {
+      if (
+        x.MS.length === 0 &&
+        box2[i - 1]?.MS.length === 0 &&
+        box2[i - 2]?.MS.length === 0
+      ) {
+        console.log(x.IP);
       }
-    });
-    //console.log(box3);
+    }); */
   };
 
   const box5Fun = () => {
@@ -365,8 +355,8 @@ export default function L1({ to, from, c1, c2 }) {
   useEffect(() => {
     //seter();
     //cheker();
-    //box2Fun();
-    box3Fun();
+    box2Fun();
+    //box3Fun();
     //box5Fun();
   }, [chartArr.length]);
 

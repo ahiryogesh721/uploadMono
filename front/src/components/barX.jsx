@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import io from "socket.io-client";
+import jsonData from "../../../front/file_667c37c4-afc3-4ad3-a29d-625c1bd5795f.json";
 
 Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -29,6 +30,21 @@ export default function BarC({ to, from }) {
         label: "",
         //data: show.map((x) => x.X?.split("x")[0]),
         data: show.slice(to, from).map((x) => +x.X?.split("x")[0]),
+        backgroundColor: "aqua",
+        borderColor: "black",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const data1 = {
+    //labels: show.map((x) => x.I),
+    labels: show.slice(to, from).map((x) => x.I),
+    datasets: [
+      {
+        label: "",
+        //data: show.map((x) => x.X?.split("x")[0]),
+        data: show.slice(to, from).map((x) => +x.players),
         backgroundColor: "aqua",
         borderColor: "black",
         borderWidth: 1,
@@ -61,9 +77,11 @@ export default function BarC({ to, from }) {
 
   const getData = async () => {
     try {
-      const res = await axios.get("/post");
-      setChartArr(changer(res.data));
-      setShow(changer(res.data));
+      //const res = await axios.get("/post");
+      //setChartArr(changer(res.data));
+      //setShow(changer(res.data));
+      setChartArr(changer(jsonData));
+      setShow(changer(jsonData));
     } catch (error) {
       setErr(error);
     }
@@ -91,22 +109,9 @@ export default function BarC({ to, from }) {
   return (
     <div>
       {err?.message === undefined ? (
-        <Bar
-          className="rotate-90 p-6 md:rotate-0"
-          data={data}
-          options={{
-            responsive: true,
-            scales: {
-              y: {
-                display: true,
-              },
-            },
-          }}
-        />
-      ) : (
         <div>
-          <h1> {err?.message}</h1>
           <Bar
+            className="rotate-90 p-6 md:rotate-0"
             data={data}
             options={{
               responsive: true,
@@ -117,6 +122,10 @@ export default function BarC({ to, from }) {
               },
             }}
           />
+        </div>
+      ) : (
+        <div>
+          <h1> {err?.message}</h1>
         </div>
       )}
     </div>
