@@ -3,12 +3,10 @@ require("dotenv").config();
 import React from "react";
 import BarC from "@/components/barX";
 import LineM from "@/components/lineM";
-import L1 from "@/components/L1";
 import L2 from "@/components/L2";
-
 export default function Home() {
-  let to = 2800,
-    from = 3000;
+  let to = 2200,
+    from = 2400;
   return (
     <div className="mt-32 flex flex-row md:mt-0 md:flex-col ">
       <div>
@@ -17,9 +15,9 @@ export default function Home() {
       <div id="lineM">
         <L2 to={to} from={from} />
       </div>
-      <div id="lineM">
+      {/* <div id="lineM">
         <LineM to={to} from={from} />
-      </div>
+      </div> */}
     </div>
   );
 }

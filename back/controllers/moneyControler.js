@@ -7,6 +7,7 @@ const io = require("../server1");
 const accountSid = "AC1365e0479e0ea18054b3f69f3b441e0f";
 const authToken = "5412c9f13c254c91a01e8e15eb256fc0";
 const client = require("twilio")(accountSid, authToken);
+const jsonData = require("/Users/rajsmac/Documents/uploadMono/back/file_70826337-3ccf-4092-9621-6d1861151865.json");
 
 const moneyPost = async (req, res) => {
   const lastEntry = await moneyModel.findOne().sort({ _id: -1 }).exec();
@@ -57,6 +58,7 @@ const moneyDellet = async (req, res) => {
 
 const moneyGet = async (req, res) => {
   let allData = await moneyModel.find().exec();
+  //res.json(jsonData);
   res.json(allData);
 };
 
