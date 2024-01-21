@@ -163,8 +163,10 @@ export default function Ab({ to, from }) {
   const getData = async () => {
     try {
       const res = await axios.get("/cards");
-      setChartArr(ab10(ab15(ab20(res.data))));
-      setShow(ab10(ab15(ab20(res.data))));
+      //setChartArr(ab10(ab15(ab20(res.data))));
+      //setShow(ab10(ab15(ab20(res.data))));
+      setChartArr(ab10(ab15(ab20(require("../../../front/data.json")))));
+      setShow(ab10(ab15(ab20(require("../../../front/data.json")))));
     } catch (error) {
       setErr(error);
     }
@@ -181,6 +183,80 @@ export default function Ab({ to, from }) {
     }
   };
 
+  const tryy = () => {
+    x;
+    let bolA = true;
+    let bolB = true;
+    let ar = [];
+
+    chartArr.forEach((x, i) => {
+      if (x.a10 <= 2 && chartArr[i + 1]?.val !== x.val && bolA) {
+        let finder = true;
+        let I = 1;
+        while (finder) {
+          let nextVal = chartArr[i + I];
+          let next1Val = chartArr[i + I + 1];
+          if (nextVal?.val === "Player A") {
+            finder = false;
+            /* console.log(
+              x.I,
+              x.a10 <= 2 ? "A" : "B",
+              nextVal?.val === next1Val?.val
+            ); */
+            ar.push({
+              i: x.I,
+              val: x.a10 <= 2 ? "A" : "B",
+              bool: nextVal?.val === next1Val?.val,
+            });
+          }
+          I++;
+        }
+        bolA = false;
+      } else if (x.a10 >= 5) {
+        bolA = true;
+      }
+
+      if (x.b10 === 2 && chartArr[i + 1]?.val !== x.val && bolB) {
+        let finder = true;
+        let I = 1;
+        while (finder) {
+          let nextVal = chartArr[i + I];
+          let next1Val = chartArr[i + I + 1];
+          if (nextVal?.val === "Player B") {
+            finder = false;
+            /* console.log(
+              x.I,
+              x.b10 <= 2 ? "B" : "A",
+              nextVal?.val === next1Val?.val
+            ); */
+            ar.push({
+              i: x.I,
+              val: x.b10 <= 2 ? "B" : "A",
+              bool: nextVal?.val === next1Val?.val,
+            });
+          }
+          I++;
+        }
+        bolB = false;
+      } else if (x.b10 >= 5) {
+        bolB = true;
+      }
+    });
+
+    if (ar.length !== 0) {
+      let print = true;
+      ar.forEach((x, i) => {
+        if (x.bool === false && ar[i - 1]?.bool === false && print) {
+          console.log(x.i, ar[i + 1]?.bool /* ar[i + 2]?.bool */);
+          print = false;
+        } else if (x.bool === false) {
+          print = true;
+        }
+      });
+    }
+    console.log(ar);
+  };
+
   useEffect(() => {
     //seter();
   }, [chartArr.length]);
@@ -188,77 +264,6 @@ export default function Ab({ to, from }) {
   useEffect(() => {
     getData();
   }, []);
-
-  let bolA = true;
-  let bolB = true;
-  let ar = [];
-
-  chartArr.forEach((x, i) => {
-    if (x.a10 <= 2 && chartArr[i + 1]?.val !== x.val && bolA) {
-      let finder = true;
-      let I = 1;
-      while (finder) {
-        let nextVal = chartArr[i + I];
-        let next1Val = chartArr[i + I + 1];
-        if (nextVal?.val === "Player A") {
-          finder = false;
-          /* console.log(
-            x.I,
-            x.a10 <= 2 ? "A" : "B",
-            nextVal?.val === next1Val?.val
-          ); */
-          ar.push({
-            i: x.I,
-            val: x.a10 <= 2 ? "A" : "B",
-            bool: nextVal?.val === next1Val?.val,
-          });
-        }
-        I++;
-      }
-      bolA = false;
-    } else if (x.a10 >= 5) {
-      bolA = true;
-    }
-
-    if (x.b10 === 2 && chartArr[i + 1]?.val !== x.val && bolB) {
-      let finder = true;
-      let I = 1;
-      while (finder) {
-        let nextVal = chartArr[i + I];
-        let next1Val = chartArr[i + I + 1];
-        if (nextVal?.val === "Player B") {
-          finder = false;
-          /* console.log(
-            x.I,
-            x.b10 <= 2 ? "B" : "A",
-            nextVal?.val === next1Val?.val
-          ); */
-          ar.push({
-            i: x.I,
-            val: x.b10 <= 2 ? "B" : "A",
-            bool: nextVal?.val === next1Val?.val,
-          });
-        }
-        I++;
-      }
-      bolB = false;
-    } else if (x.b10 >= 5) {
-      bolB = true;
-    }
-  });
-
-  if (ar.length !== 0) {
-    let print = true;
-    ar.forEach((x, i) => {
-      if (x.bool === false && ar[i - 1]?.bool === false && print) {
-        console.log(x.i, ar[i + 1]?.bool /* ar[i + 2]?.bool */);
-        print = false;
-      } else if (x.bool === false) {
-        print = true;
-      }
-    });
-  }
-  console.log(ar);
 
   return (
     <div>
@@ -276,34 +281,6 @@ export default function Ab({ to, from }) {
           }}
         />
       </div>
-      {/* <div>
-        15
-        <Bar
-          data={data15}
-          options={{
-            responsive: true,
-            scales: {
-              y: {
-                display: true,
-              },
-            },
-          }}
-        />
-      </div>
-      <div>
-        20
-        <Bar
-          data={data20}
-          options={{
-            responsive: true,
-            scales: {
-              y: {
-                display: true,
-              },
-            },
-          }}
-        />
-      </div> */}
     </div>
   );
 }
