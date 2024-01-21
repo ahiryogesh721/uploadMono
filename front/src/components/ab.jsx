@@ -162,7 +162,7 @@ export default function Ab({ to, from }) {
 
   const getData = async () => {
     try {
-      const res = await axios.get("/cards");
+      //const res = await axios.get("/cards");
       //setChartArr(ab10(ab15(ab20(res.data))));
       //setShow(ab10(ab15(ab20(res.data))));
       setChartArr(ab10(ab15(ab20(require("../../../front/data.json")))));
@@ -271,6 +271,34 @@ export default function Ab({ to, from }) {
         10
         <Bar
           data={data10}
+          options={{
+            responsive: true,
+            scales: {
+              y: {
+                display: true,
+              },
+            },
+          }}
+        />
+      </div>
+      <div>
+        15
+        <Bar
+          data={data15}
+          options={{
+            responsive: true,
+            scales: {
+              y: {
+                display: true,
+              },
+            },
+          }}
+        />
+      </div>
+      <div>
+        20
+        <Bar
+          data={data20}
           options={{
             responsive: true,
             scales: {

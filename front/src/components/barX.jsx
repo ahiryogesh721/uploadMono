@@ -113,8 +113,8 @@ export default function BarC({ to, from }) {
 
   const getData = async () => {
     try {
-      const res = await axios.get("/cards");
-      let newRes = numberAsinger(con2(res.data));
+      //const res = await axios.get("/cards");
+      //let newRes = numberAsinger(con2(res.data));
       setChartArr(require("../../../front/data.json"));
       setShow(require("../../../front/data.json"));
     } catch (error) {
