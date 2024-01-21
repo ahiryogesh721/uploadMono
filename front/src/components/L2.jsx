@@ -126,7 +126,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D3: i <= 1 ? -i : i,
+              D3: i <= 2 ? -i : i,
             };
           }
           i++;
@@ -298,20 +298,18 @@ export default function L1({ to, from, c1, c2 }) {
     let box5 = [];
     let allow = true;
     chartArr.forEach((x, i) => {
-      if (x.D10 <= -1 && allow) {
-        chartArr[i + 1]?.D10 <= -1
-          ? box5.push({ iX: x.D10, i: x.I, val: 1 })
-          : chartArr[i + 2]?.D10 <= -1
-          ? box5.push({ iX: x.D10, i: x.I, val: 2 })
-          : chartArr[i + 3]?.D10 <= -1
-          ? box5.push({ iX: x.D10, i: x.I, val: 3 })
-          : chartArr[i + 4]?.D10 <= -1
-          ? box5.push({ iX: x.D10, i: x.I, val: 4 })
-          : chartArr[i + 5]?.D10 <= -1
-          ? box5.push({ iX: x.D10, i: x.I, val: 0 })
-          : box5.push({ iX: x.D10, i: x.I, val: 0 });
+      if (x.D5 === 5 && allow) {
+        chartArr[i + 1]?.D5 <= -1
+          ? box5.push({ iX: x.D5, i: x.I, val: 1 })
+          : chartArr[i + 2]?.D5 <= -1
+          ? box5.push({ iX: x.D5, i: x.I, val: 2 })
+          : chartArr[i + 3]?.D5 <= -1
+          ? box5.push({ iX: x.D5, i: x.I, val: 3 })
+          : chartArr[i + 4]?.D5 <= -1
+          ? box5.push({ iX: x.D5, i: x.I, val: 4 })
+          : box5.push({ iX: x.D5, i: x.I, val: 0 });
         allow = false;
-      } else if (x.D10 >= 0) {
+      } else if (x.D5 >= 0) {
         allow = true;
       }
     });
@@ -355,9 +353,9 @@ export default function L1({ to, from, c1, c2 }) {
   useEffect(() => {
     //seter();
     //cheker();
-    box2Fun();
+    //box2Fun();
     //box3Fun();
-    //box5Fun();
+    box5Fun();
   }, [chartArr.length]);
 
   useEffect(() => {
