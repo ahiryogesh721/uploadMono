@@ -101,7 +101,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D2: i <= 1 ? -i : i,
+              D2: i <= 2 ? -i : i,
             };
           }
           i++;
@@ -126,7 +126,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D3: i <= 2 ? -i : i,
+              D3: i <= 1 ? -i : i,
             };
           }
           i++;
@@ -151,7 +151,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D5: i <= 4 ? -i : i,
+              D5: i <= 5 ? -i : i,
             };
           }
           i++;
@@ -197,11 +197,11 @@ export default function L1({ to, from, c1, c2 }) {
         while (finder) {
           let indexOfBreker = I - i;
           let lx = arr[indexOfBreker]?.X?.split("x")[0];
-          if (lx >= 10) {
+          if (lx >= 20) {
             finder = false;
             return {
               ...x,
-              D20: i <= 5 ? -i : i,
+              D20: i <= 10 ? -i : i,
             };
           }
           i++;
@@ -259,7 +259,7 @@ export default function L1({ to, from, c1, c2 }) {
     let box2 = [];
     let alow1 = true;
     chartArr.forEach((x, i) => {
-      if (alow1 && x.D2 > 6) {
+      if (alow1 && x.D2 === 2) {
         /* let obj = {};
         let condition = true;
         let I = 1;
@@ -283,66 +283,74 @@ export default function L1({ to, from, c1, c2 }) {
         alow1 = true;
       }
     });
-    console.log(box2);
+    //console.log(box2);
 
-    /* let box3 = [];
+    let box3 = [];
     let alllow = true;
     box2.forEach((x, i) => {
-      if (x.MS.length !== 0 && alllow) {
-        box3.push({ i: x.IP, val: box2[i + 1]?.MS.length });
+      if (x.val === 1 && alllow) {
+        box3.push({ i: x.i, val: box2[i + 1]?.val });
         alllow = false;
-      } else if (x.MS.length === 0) {
+      } else if (x.val === 0) {
         alllow = true;
       }
     });
-    console.log(box3); */
+    //console.log(box3);
   };
 
   const box5Fun = () => {
+    /* 
+    25+
+    5-
+    5Val
+    */
     let box5 = [];
-    let allow = true;
+    let alow = true;
     chartArr.forEach((x, i) => {
-      if (x.D5 === 5 && allow) {
-        chartArr[i + 1]?.D5 <= -1
+      if (+x.D5 === -1 && alow) {
+        +chartArr[i + 1]?.D5 <= -1
           ? box5.push({ iX: x.D5, i: x.I, val: 1 })
-          : chartArr[i + 2]?.D5 <= -1
+          : +chartArr[i + 2]?.D5 <= -1
           ? box5.push({ iX: x.D5, i: x.I, val: 2 })
-          : chartArr[i + 3]?.D5 <= -1
+          : +chartArr[i + 3]?.D5 <= -1
           ? box5.push({ iX: x.D5, i: x.I, val: 3 })
-          : chartArr[i + 4]?.D5 <= -1
+          : +chartArr[i + 4]?.D5 <= -1
           ? box5.push({ iX: x.D5, i: x.I, val: 4 })
-          : box5.push({ iX: x.D5, i: x.I, val: 0 });
-        allow = false;
-      } else if (x.D5 >= 0) {
-        allow = true;
+          : +chartArr[i + 5]?.D5 <= -1
+          ? box5.push({ iX: x.D5, i: x.I, val: 5 })
+          : /* : +chartArr[i - 1]?.X?.split("x")[0] >= 5
+          ? ""
+          : +chartArr[i - 2]?.X?.split("x")[0] >= 5
+          ? ""
+          : +chartArr[i - 3]?.X?.split("x")[0] >= 5
+          ? ""
+          : +chartArr[i - 4]?.X?.split("x")[0] >= 5
+          ? "" */
+            box5.push({ iX: x.D5, i: x.I, val: 0 });
+        alow = false;
+      } else if (+x.D5 === 0) {
+        alow = true;
       }
     });
     console.log(box5);
 
-    /* let finalAr = [];
+    /* let alow1 = true;
+    let boxag = [];
     box5.forEach((x, i) => {
-      if ( x.val === 3 ||  x.val === 4) {
-        finalAr.push({
-          i: `${x.val}:${x.i}`,
-          val: `${
-            box5[i + 1]?.val === 4
-              ? "0"
-              : box5[i + 1]?.val === 3
-              ? "0"
-              : `${box5[i + 1]?.val}`
-          }`,
-          valX: box5[i + 1]?.valX,
-        });
+      if (x.val !== 0 && alow1) {
+        console.log(x.i, box5[i + 1]?.val);
+        alow1 = false;
+      } else if (x.val !== 0) {
+        alow1 = true;
       }
-    });
-    console.log(finalAr); */
+    }); */
   };
 
   const box3Fun = () => {
     let allow = true;
     let box3 = [];
     chartArr.forEach((x, i) => {
-      if (x.D3 > 9) {
+      if (x.D3 === 2) {
         chartArr[i + 1]?.D3 === -1
           ? box3.push({ i: x.I, val: 1 })
           : box3.push({ i: x.I, val: 0 });
