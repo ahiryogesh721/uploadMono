@@ -162,11 +162,9 @@ export default function Ab({ to, from }) {
 
   const getData = async () => {
     try {
-      //const res = await axios.get("/cards");
-      //setChartArr(ab10(ab15(ab20(res.data))));
-      //setShow(ab10(ab15(ab20(res.data))));
-      setChartArr(ab10(ab15(ab20(require("../../../front/data.json")))));
-      setShow(ab10(ab15(ab20(require("../../../front/data.json")))));
+      const res = await axios.get("/cards");
+      setChartArr(ab10(ab15(ab20(res.data))));
+      setShow(ab10(ab15(ab20(res.data))));
     } catch (error) {
       setErr(error);
     }
@@ -264,6 +262,104 @@ export default function Ab({ to, from }) {
   useEffect(() => {
     getData();
   }, []);
+
+  /*  */
+
+  let aA = true;
+  let aB = true;
+  let box = [];
+  chartArr.forEach((x, i) => {
+    if (x.a15 === 3 && aA) {
+      let mapeAr = chartArr
+        .slice(i + 1, i + 31)
+        .map((x) => ((x.val = x.val[x.val.length - 1]) === "A" ? 1 : 0));
+      let statA = mapeAr.reduce(
+        (c, cc, i) => {
+          if (cc === 0 && c.entrys.length === 0) {
+            return { ...c, allow: true };
+          }
+          if (cc === 1 && c.allow) {
+            if (mapeAr[i + 1] === 1) {
+              return {
+                ...c,
+                entrys: [...c.entrys, { val: 1, indexs: `${i}:${i + 1}` }],
+                allow: false,
+              };
+            } else
+              return {
+                ...c,
+                entrys: [...c.entrys, { val: 1, indexs: `${i}:0` }],
+              };
+          }
+          return c;
+        },
+        {
+          entrys: [],
+          allow: x.val[x.val.length - 1] !== "A" ? true : false,
+        }
+      );
+      //console.log("A", x.I, statA.entrys.length - 1);
+      box.push({
+        iX: "A",
+        i: x.I,
+        len: statA.entrys.length - 1,
+      });
+      aA = false;
+    } else if (x.a15 === 7) {
+      aA = true;
+    }
+    if (x.b15 === 3 && aB) {
+      let mapeAr = chartArr
+        .slice(i + 1, i + 31)
+        .map((x) => ((x.val = x.val[x.val.length - 1]) === "B" ? 1 : 0));
+      let statA = mapeAr.reduce(
+        (c, cc, i) => {
+          if (cc === 0 && c.entrys.length === 0) {
+            return { ...c, allow: true };
+          }
+          if (cc === 1 && c.allow) {
+            if (mapeAr[i + 1] === 1) {
+              return {
+                ...c,
+                entrys: [...c.entrys, { val: 1, indexs: `${i}:${i + 1}` }],
+                allow: false,
+              };
+            } else
+              return {
+                ...c,
+                entrys: [...c.entrys, { val: 1, indexs: `${i}:0` }],
+              };
+          }
+          return c;
+        },
+        {
+          entrys: [],
+          allow: x.val[x.val.length - 1] !== "B" ? true : false,
+        }
+      );
+      //console.log("B", x.I, statA.entrys.length - 1);
+      box.push({ iX: "B", i: x.I, len: statA.entrys.length - 1 });
+      aB = false;
+    } else if (x.b15 === 7) {
+      aB = true;
+    }
+  });
+  //console.log(box);
+
+  let evala = box.reduce(
+    (x, xx, i) => {
+      if (xx.len === 3 || xx.len === 3) {
+        return { ...x, catch: x.catch + 1 };
+      } else if (xx.len >= 6) {
+        return { ...x, misss: x.misss + 1 };
+      }
+      return x;
+    },
+    { catch: 0, misss: 0 }
+  );
+  //console.log(evala);
+
+  /*  */
 
   return (
     <div>
