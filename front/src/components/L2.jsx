@@ -350,7 +350,7 @@ export default function L1({ to, from, c1, c2 }) {
     let allow = true;
     let box3 = [];
     chartArr.forEach((x, i) => {
-      if (x.D3 === 2) {
+      if (x.D3 === 2 || x.D3 === 3 || x.D3 === 4) {
         chartArr[i + 1]?.D3 === -1
           ? box3.push({ i: x.I, val: 1 })
           : box3.push({ i: x.I, val: 0 });
@@ -366,7 +366,7 @@ export default function L1({ to, from, c1, c2 }) {
     //seter();
     //cheker();
     //box2Fun();
-    //box3Fun();
+    box3Fun();
     //box5Fun();
   }, [chartArr.length]);
 
