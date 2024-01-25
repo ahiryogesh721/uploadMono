@@ -109,6 +109,11 @@ export default function BarC({ to, from }) {
     getData();
   }, []);
 
+  let log = {
+    lv: null,
+    alow: true,
+  };
+  let mainAr = [];
   chartArr.forEach((x, i) => {
     if (
       x.val === chartArr[i - 1]?.val &&
@@ -116,9 +121,64 @@ export default function BarC({ to, from }) {
       chartArr[i - 2]?.val === chartArr[i - 3]?.val &&
       chartArr[i - 3]?.val === chartArr[i - 4]?.val &&
       chartArr[i - 4]?.val === chartArr[i - 5]?.val &&
+      log.alow
+    ) {
+      let mar = chartArr
+        .slice(i + 1, i + 21)
+        .map((x) => (x = x.val[x.val.length - 1]));
+      let first = true;
+      let re = 0;
+      mar.forEach((x1, i1) => {
+        if (x.val[x.val.length - 1] !== x1 && first) {
+          mar[i1 + 1] === x1 ? (re = 1) : (re = 0);
+          first = false;
+        }
+      });
+      //console.log(x.val[x.val.length - 1], x.I, mar, re);
+      mainAr.push({ vx: x.val[x.val.length - 1], i: x.I, result: re });
+      log.lv = x.val;
+      log.alow = false;
+    } else if (x.val !== log.lv) {
+      log.alow = true;
+    }
+  });
+  //console.log(mainAr);
+
+  /* let a1 = true;
+  mainAr.forEach((x, i) => {
+    if (x.result === 0 && a1) {
+      console.log(
+        `0:${x.vx}:${x.i}`,
+        `next:${mainAr[i + 1]?.vx}:${mainAr[i + 1]?.i}:${mainAr[i + 1]?.result}`
+      );
+      a1 = false;
+    } else if (x.result === 1) {
+      a1 = true;
+    }
+  });*/
+
+  let t1 = true;
+  let la = null;
+  let tar = [];
+  chartArr.forEach((x, i) => {
+    if (
+      t1 &&
+      x.val === chartArr[i - 1]?.val &&
+      chartArr[i - 1]?.val === chartArr[i - 2]?.val &&
+      chartArr[i - 2]?.val === chartArr[i - 3]?.val &&
+      chartArr[i - 3]?.val === chartArr[i - 4]?.val &&
+      chartArr[i - 4]?.val === chartArr[i - 5]?.val &&
       chartArr[i - 5]?.val === chartArr[i - 6]?.val
     ) {
-      console.log(x.val, x.I, chartArr.slice(i + 1, i + 11));
+      console.log(
+        x.val[x.val.length - 1],
+        x.I,
+        chartArr.slice(i + 1, i + 21).map((x) => (x = x.val[x.val.length - 1]))
+      );
+      t1 = false;
+      la = x.val;
+    } else if (x.val !== la) {
+      t1 = true;
     }
   });
 
