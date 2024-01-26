@@ -62,11 +62,9 @@ export default function LineM({ to, from, c1, c2 }) {
 
   const getData = async () => {
     try {
-      //const res = await axios.get("/post");
-      //setChartArr(changer(res.data));
-      //setShow(changer(res.data));
-      setChartArr(changer(jsonData));
-      setShow(changer(jsonData));
+      const res = await axios.get("/post");
+      setChartArr(changer(res.data));
+      setShow(changer(res.data));
     } catch (error) {
       setErr(error);
     }

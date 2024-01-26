@@ -101,7 +101,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D2: i <= 2 ? -i : i,
+              D2: i <= 1 ? -i : i,
             };
           }
           i++;
@@ -147,7 +147,7 @@ export default function L1({ to, from, c1, c2 }) {
         while (finder) {
           let indexOfBreker = I - i;
           let lx = arr[indexOfBreker]?.X?.split("x")[0];
-          if (lx >= 5) {
+          if (lx >= 10) {
             finder = false;
             return {
               ...x,
@@ -176,7 +176,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D10: i <= 5 ? -i : i,
+              D10: i <= 10 ? -i : i,
             };
           }
           i++;
@@ -228,9 +228,8 @@ export default function L1({ to, from, c1, c2 }) {
 
   const getData = async () => {
     try {
-      //const res = await axios.get("/post");
-      const seterArr = con2(con3(con5(con10(con20(jsonData)))));
-      //const seterArr = con2(con3(con5(con10(con20(res.data)))));
+      const res = await axios.get("/post");
+      const seterArr = con2(con3(con5(con10(con20(res.data)))));
       setChartArr(changer(seterArr));
       setShow(changer(seterArr));
     } catch (error) {
@@ -259,8 +258,14 @@ export default function L1({ to, from, c1, c2 }) {
     let box2 = [];
     let alow1 = true;
     chartArr.forEach((x, i) => {
-      if (alow1 && x.D2 === 2) {
-        /* let obj = {};
+      if (
+        alow1 &&
+        x.D2 === -1 &&
+        chartArr[i - 1].D2 === -1 &&
+        chartArr[i - 2].D2 === -1 &&
+        chartArr[i - 3].D2 === -1
+      ) {
+        let obj = {};
         let condition = true;
         let I = 1;
         obj.IP = x.I;
@@ -274,10 +279,10 @@ export default function L1({ to, from, c1, c2 }) {
             condition = false;
           }
           I++;
-        } */
-        chartArr[i + 1]?.D2 === -1
+        }
+        /* chartArr[i + 1]?.D2 === -1
           ? box2.push({ i: x.I, val: 1 })
-          : box2.push({ i: x.I, val: 0 });
+          : box2.push({ i: x.I, val: 0 }); */
         alow1 = false;
       } else if (x.D2 === 0) {
         alow1 = true;
@@ -299,15 +304,10 @@ export default function L1({ to, from, c1, c2 }) {
   };
 
   const box5Fun = () => {
-    /* 
-    25+
-    5-
-    5Val
-    */
     let box5 = [];
     let alow = true;
     chartArr.forEach((x, i) => {
-      if (+x.D5 === -1 && alow) {
+      if (+x.D5 >= 15 && alow) {
         +chartArr[i + 1]?.D5 <= -1
           ? box5.push({ iX: x.D5, i: x.I, val: 1 })
           : +chartArr[i + 2]?.D5 <= -1
@@ -333,17 +333,6 @@ export default function L1({ to, from, c1, c2 }) {
       }
     });
     console.log(box5);
-
-    /* let alow1 = true;
-    let boxag = [];
-    box5.forEach((x, i) => {
-      if (x.val !== 0 && alow1) {
-        console.log(x.i, box5[i + 1]?.val);
-        alow1 = false;
-      } else if (x.val !== 0) {
-        alow1 = true;
-      }
-    }); */
   };
 
   const box3Fun = () => {
@@ -365,14 +354,27 @@ export default function L1({ to, from, c1, c2 }) {
   useEffect(() => {
     //seter();
     //cheker();
-    //box2Fun();
-    box3Fun();
+    box2Fun();
+    //box3Fun();
     //box5Fun();
   }, [chartArr.length]);
 
   useEffect(() => {
     getData();
   }, []);
+
+  chartArr.forEach((x, i) => {
+    let ar = chartArr.slice(i - 40, i);
+    let bobVal = ar.reduce(
+      (x, xx, i1) => {
+        return { ...x, val: x.val + xx.inout };
+      },
+      { val: 0 }
+    );
+    if (bobVal.val <= -15000000) {
+      //console.log(x.I);
+    }
+  });
 
   return (
     <div>

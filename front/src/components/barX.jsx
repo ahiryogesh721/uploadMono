@@ -77,11 +77,9 @@ export default function BarC({ to, from }) {
 
   const getData = async () => {
     try {
-      //const res = await axios.get("/post");
-      //setChartArr(changer(res.data));
-      //setShow(changer(res.data));
-      setChartArr(changer(jsonData));
-      setShow(changer(jsonData));
+      const res = await axios.get("/post");
+      setChartArr(changer(res.data));
+      setShow(changer(res.data));
     } catch (error) {
       setErr(error);
     }

@@ -5,8 +5,8 @@ import BarC from "@/components/barX";
 import LineM from "@/components/lineM";
 import L2 from "@/components/L2";
 export default function Home() {
-  let to = 30300,
-    from = 30400;
+  let to = 31000,
+    from = 31200;
   return (
     <div className="mt-32 flex flex-row md:mt-0 md:flex-col ">
       <div>
