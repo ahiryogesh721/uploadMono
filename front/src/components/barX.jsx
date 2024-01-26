@@ -170,11 +170,16 @@ export default function BarC({ to, from }) {
       chartArr[i - 4]?.val === chartArr[i - 5]?.val &&
       chartArr[i - 5]?.val === chartArr[i - 6]?.val
     ) {
-      console.log(
+      /* console.log(
         x.val[x.val.length - 1],
         x.I,
-        chartArr.slice(i + 1, i + 21).map((x) => (x = x.val[x.val.length - 1]))
-      );
+        chartArr
+          .slice(i + 1, i + 21)
+          .map(
+            (y) =>
+              (y = y.val[x.val.length - 1] === x.val[x.val.length - 1] ? 1 : 0)
+          )
+      ); */
       t1 = false;
       la = x.val;
     } else if (x.val !== la) {

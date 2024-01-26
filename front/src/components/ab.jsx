@@ -103,7 +103,7 @@ export default function Ab({ to, from }) {
   const ab10 = (arr) => {
     return arr.map((x, I) => {
       if (I >= 10) {
-        let saver = arr.slice(I - 10, I).reduceRight(
+        let saver = arr.slice(I - 30, I).reduceRight(
           (c, cc) => {
             if (cc.val === "Player A") {
               return { ...c, a: c.a + 1 };
@@ -123,7 +123,7 @@ export default function Ab({ to, from }) {
   const ab15 = (arr) => {
     return arr.map((x, I) => {
       if (I >= 10) {
-        let saver = arr.slice(I - 15, I).reduceRight(
+        let saver = arr.slice(I - 10, I).reduceRight(
           (c, cc) => {
             if (cc.val === "Player A") {
               return { ...c, a: c.a + 1 };
@@ -269,19 +269,9 @@ export default function Ab({ to, from }) {
   let aB = true;
   let box = [];
   chartArr.forEach((x, i) => {
-    if (
-      /* chartArr.slice(i - 10, i).filter((x) => {
-        x.a10 <= 2;
-      }).length === 0 && */
-      x.a10 <= 2 &&
-      chartArr[i - 1]?.a10 <= 2 &&
-      chartArr[i - 2]?.a10 <= 2 &&
-      chartArr[i - 3]?.a10 <= 2 &&
-      chartArr[i - 4]?.a10 <= 2 &&
-      aA
-    ) {
+    if (x.a10 === 10 && aA) {
       let mapeAr = chartArr
-        .slice(i + 1, i + 11)
+        .slice(i + 1, i + 41)
         .map((x) => ((x.val = x.val[x.val.length - 1]) === "A" ? 1 : 0));
       let statAD = mapeAr.reduce(
         (c, cc, i) => {
@@ -319,27 +309,18 @@ export default function Ab({ to, from }) {
       box.push({
         iX: "A",
         i: x.I,
+        ar: mapeAr,
         //ar: mapeAr,
         //dis: bob1?.i,
         len: statAD.entrys.length - 1,
       });
       aA = false;
-    } else if (x.a10 === 5) {
+    } else if (x.a10 === 15) {
       aA = true;
     }
-    if (
-      /* chartArr.slice(i - 10, i).filter((x) => {
-        x.a10 <= 2;
-      }).length === 0 && */
-      x.b10 <= 2 &&
-      chartArr[i - 1]?.b10 <= 2 &&
-      chartArr[i - 2]?.b10 <= 2 &&
-      chartArr[i - 3]?.b10 <= 2 &&
-      chartArr[i - 4]?.b10 <= 2 &&
-      aB
-    ) {
+    if (x.b10 === 10 && aB) {
       let mapeAr = chartArr
-        .slice(i + 1, i + 11)
+        .slice(i + 1, i + 41)
         .map((x) => ((x.val = x.val[x.val.length - 1]) === "B" ? 1 : 0));
       let statBD = mapeAr.reduce(
         (c, cc, i) => {
@@ -376,57 +357,25 @@ export default function Ab({ to, from }) {
       box.push({
         iX: "B",
         i: x.I,
+        ar: mapeAr,
         //arr: mapeAr,
         //dis: bob1?.i,
         len: statBD.entrys.length - 1,
       });
       aB = false;
-    } else if (x.b10 === 5) {
+    } else if (x.b10 === 15) {
       aB = true;
     }
   });
-  //console.log(box);
-  //console.log("cathch", box.filter((x) => x.len === 0).length);
-  //console.log("miss", box.filter((x) => x.len > 0).length);
-
-  let evala = box.reduce(
-    (x, xx, i) => {
-      if (xx.len == 0) {
-        return { ...x, o0: x.o0 + 1 };
-      } else if (xx.len == 1) {
-        return { ...x, o1: x.o1 + 1 };
-      } else if (xx.len == 2) {
-        return { ...x, o2: x.o2 + 1 };
-      } else if (xx.len == 3) {
-        return { ...x, o3: x.o3 + 1 };
-      } else if (xx.len == 4) {
-        return { ...x, o4: x.o4 + 1 };
-      } else if (xx.len > 4) {
-        return { ...x, op: x.op + 1 };
-      }
-      return x;
-    },
-    { o0: 0, o1: 0, o2: 0, o3: 0, o4: 0, op: 0 }
-  );
-  //console.log(evala);
-
-  /* chartArr.forEach((x, i) => {
-    let befAr = chartArr.slice(i - 25, i);
-    let aVal = befAr.filter((x) => x.a15 <= 4);
-    let bVal = befAr.filter((x) => x.b15 <= 4);
-    if (aVal.length >= 15) {
-      console.log("A", x.I);
-    } else if (bVal.length >= 15) {
-      console.log("B", x.I);
-    }
-  }); */
+  console.log(box);
+  //console.log("cathch", box.filter((x) => x.len >= 4).length);
 
   return (
     <div>
       <div>
-        10
+        15
         <Bar
-          data={data10}
+          data={data15}
           options={{
             responsive: true,
             scales: {
@@ -438,9 +387,9 @@ export default function Ab({ to, from }) {
         />
       </div>
       <div>
-        15
+        10
         <Bar
-          data={data15}
+          data={data10}
           options={{
             responsive: true,
             scales: {
