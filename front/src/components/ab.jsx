@@ -123,7 +123,7 @@ export default function Ab({ to, from }) {
   const ab15 = (arr) => {
     return arr.map((x, I) => {
       if (I >= 10) {
-        let saver = arr.slice(I - 10, I).reduceRight(
+        let saver = arr.slice(I - 15, I).reduceRight(
           (c, cc) => {
             if (cc.val === "Player A") {
               return { ...c, a: c.a + 1 };
@@ -269,9 +269,9 @@ export default function Ab({ to, from }) {
   let aB = true;
   let box = [];
   chartArr.forEach((x, i) => {
-    if (x.a10 === 10 && aA) {
+    if (x.a10 === 8 && aA) {
       let mapeAr = chartArr
-        .slice(i + 1, i + 41)
+        .slice(i + 1, i + 21)
         .map((x) => ((x.val = x.val[x.val.length - 1]) === "A" ? 1 : 0));
       let statAD = mapeAr.reduce(
         (c, cc, i) => {
@@ -318,9 +318,9 @@ export default function Ab({ to, from }) {
     } else if (x.a10 === 15) {
       aA = true;
     }
-    if (x.b10 === 10 && aB) {
+    if (x.b10 === 8 && aB) {
       let mapeAr = chartArr
-        .slice(i + 1, i + 41)
+        .slice(i + 1, i + 21)
         .map((x) => ((x.val = x.val[x.val.length - 1]) === "B" ? 1 : 0));
       let statBD = mapeAr.reduce(
         (c, cc, i) => {
@@ -368,7 +368,39 @@ export default function Ab({ to, from }) {
     }
   });
   console.log(box);
+  /* let aq = true;
+  box.forEach((z1, i1) => {
+    if (
+      z1.len === 0 &&
+      box[i1 - 1]?.len === 0 &&
+      box[i1 - 2]?.len === 0 &&
+      aq
+    ) {
+      console.log(z1.iX, z1.i, "0", box[i1 + 1]?.i, "1", box[i1 + 1]?.len);
+      aq = false;
+    } else if (z1.len !== 0) {
+      aq = true;
+    }
+  }); */
   //console.log("cathch", box.filter((x) => x.len >= 4).length);
+
+  /* let g1 = true;
+   chartArr.forEach((x, i) => {
+    if (
+      x.val !== chartArr[i - 1]?.val &&
+      chartArr[i - 1]?.val !== chartArr[i - 2]?.val &&
+      chartArr[i - 2]?.val !== chartArr[i - 3]?.val &&
+      chartArr[i - 3]?.val !== chartArr[i - 4]?.val &&
+      chartArr[i - 4]?.val !== chartArr[i - 5]?.val &&
+      chartArr[i - 5]?.val !== chartArr[i - 6]?.val &&
+      g1
+    ) {
+      console.log(x.I);
+      let g1 = false;
+    } else if (x.val === chartArr[i - 1]?.val) {
+      g1 = true;
+    }
+  }); */
 
   return (
     <div>

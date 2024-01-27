@@ -165,10 +165,13 @@ export default function BarC({ to, from }) {
       t1 &&
       x.val === chartArr[i - 1]?.val &&
       chartArr[i - 1]?.val === chartArr[i - 2]?.val &&
-      chartArr[i - 2]?.val === chartArr[i - 3]?.val &&
+      chartArr[i - 2]?.val === chartArr[i - 3]?.val /*&&
       chartArr[i - 3]?.val === chartArr[i - 4]?.val &&
       chartArr[i - 4]?.val === chartArr[i - 5]?.val &&
-      chartArr[i - 5]?.val === chartArr[i - 6]?.val
+      chartArr[i - 5]?.val === chartArr[i - 6]?.val &&
+      chartArr[i - 6]?.val === chartArr[i - 7]?.val   &&
+      chartArr[i - 7]?.val === chartArr[i - 8]?.val &&
+      chartArr[i - 8]?.val === chartArr[i - 9]?.val */
     ) {
       /* console.log(
         x.val[x.val.length - 1],
