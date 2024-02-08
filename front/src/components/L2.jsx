@@ -126,7 +126,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D3: i <= 1 ? -i : i,
+              D3: i <= 3 ? -i : i,
             };
           }
           i++;
@@ -147,11 +147,11 @@ export default function L1({ to, from, c1, c2 }) {
         while (finder) {
           let indexOfBreker = I - i;
           let lx = arr[indexOfBreker]?.X?.split("x")[0];
-          if (lx >= 10) {
+          if (lx >= 5) {
             finder = false;
             return {
               ...x,
-              D5: i <= 5 ? -i : i,
+              D5: i <= 10 ? -i : i,
             };
           }
           i++;
@@ -176,7 +176,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D10: i <= 10 ? -i : i,
+              D10: i <= 20 ? -i : i,
             };
           }
           i++;
@@ -354,7 +354,7 @@ export default function L1({ to, from, c1, c2 }) {
   useEffect(() => {
     //seter();
     //cheker();
-    box2Fun();
+    //box2Fun();
     //box3Fun();
     //box5Fun();
   }, [chartArr.length]);
@@ -363,18 +363,28 @@ export default function L1({ to, from, c1, c2 }) {
     getData();
   }, []);
 
+  let BA = true;
+  let BB = [];
   chartArr.forEach((x, i) => {
-    let ar = chartArr.slice(i - 40, i);
-    let bobVal = ar.reduce(
-      (x, xx, i1) => {
-        return { ...x, val: x.val + xx.inout };
-      },
-      { val: 0 }
-    );
-    if (bobVal.val <= -15000000) {
-      //console.log(x.I);
+    if (
+      BA &&
+      x.D2 >= 4 &&
+      chartArr[i + 1]?.D2 === 0 &&
+      chartArr[i + 2]?.D2 === 0 &&
+      chartArr[i + 3]?.D2 === 0 &&
+      x.I >= 50000 &&
+      x.I <= 60000
+    ) {
+      BB.push({
+        i: x.I,
+        val: 1,
+      });
+      BA = false;
+    } else if (x.D2 === 0) {
+      BA = true;
     }
   });
+  console.log(BB);
 
   return (
     <div>

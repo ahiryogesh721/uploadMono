@@ -37,21 +37,6 @@ export default function BarC({ to, from }) {
     ],
   };
 
-  const data1 = {
-    //labels: show.map((x) => x.I),
-    labels: show.slice(to, from).map((x) => x.I),
-    datasets: [
-      {
-        label: "",
-        //data: show.map((x) => x.X?.split("x")[0]),
-        data: show.slice(to, from).map((x) => +x.players),
-        backgroundColor: "aqua",
-        borderColor: "black",
-        borderWidth: 1,
-      },
-    ],
-  };
-
   function changer(data) {
     const uniqueIds = new Set();
     return data.filter((entry) => {
@@ -103,6 +88,44 @@ export default function BarC({ to, from }) {
   useEffect(() => {
     getData();
   }, []);
+
+  let alow = true;
+  let box = [];
+
+  chartArr.forEach((x, i) => {
+    if (
+      alow &&
+      x.I > 50000 &&
+      +x.X?.split("x")[0] < 2 &&
+      +chartArr[i - 1]?.X?.split("x")[0] < 2 &&
+      +chartArr[i - 2]?.X?.split("x")[0] < 2 &&
+      +chartArr[i - 3]?.X?.split("x")[0] < 2
+    ) {
+      box.push({
+        i: x.I,
+        ar: chartArr.slice(i + 1, i + 21).map((x) => +x.X?.split("x")[0]),
+      });
+      alow = false;
+    } else if (+x.X?.split("x")[0] >= 2) {
+      alow = true;
+    }
+  });
+  //console.log(box);
+
+  const dataP = {
+    //labels: show.map((x) => x.I),
+    labels: show.slice(to, from).map((x) => x.I),
+    datasets: [
+      {
+        label: "",
+        //data: show.map((x) => x.X?.split("x")[0]),
+        data: show.slice(to, from).map((x) => x.playersBets),
+        backgroundColor: "aqua",
+        borderColor: "black",
+        borderWidth: 1,
+      },
+    ],
+  };
 
   return (
     <div>

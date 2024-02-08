@@ -78,7 +78,7 @@ export default function LineM({ to, from, c1, c2 }) {
 
   const seter = () => {
     if (show.length >= 10) {
-      let setArr = show.slice(show.length - 100, show.length);
+      let setArr = show.slice(show.length - 300, show.length);
       setShow(setArr);
     }
     if (chartArr.length >= 800) {
@@ -98,31 +98,15 @@ export default function LineM({ to, from, c1, c2 }) {
   return (
     <div>
       {err?.message === undefined ? (
-        <Line
-          className="rotate-90 p-6 md:rotate-0"
-          data={data}
-          options={{
-            responsive: true,
-            scales: {
-              y: {
-                display: false,
-              },
-              x: {
-                display: false,
-              },
-            },
-          }}
-        />
-      ) : (
         <div>
-          <h1> {err?.message}</h1>
           <Line
+            className="rotate-90 p-6 md:rotate-0"
             data={data}
             options={{
               responsive: true,
               scales: {
                 y: {
-                  display: true,
+                  display: false,
                 },
                 x: {
                   display: false,
@@ -130,6 +114,10 @@ export default function LineM({ to, from, c1, c2 }) {
               },
             }}
           />
+        </div>
+      ) : (
+        <div>
+          <h1> {err?.message}</h1>
         </div>
       )}
     </div>

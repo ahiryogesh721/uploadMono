@@ -5,8 +5,8 @@ import BarC from "@/components/barX";
 import LineM from "@/components/lineM";
 import L2 from "@/components/L2";
 export default function Home() {
-  let to = 31000,
-    from = 31200;
+  let to = 51200,
+    from = 51400;
   return (
     <div className="mt-32 flex flex-row md:mt-0 md:flex-col ">
       <div>
@@ -18,6 +18,9 @@ export default function Home() {
       <div id="lineM">
         <LineM to={to} from={from} />
       </div>
+      {/* <div id="lineM">
+        <LineM to={to - 1000} from={from + 1000} />
+      </div> */}
     </div>
   );
 }
