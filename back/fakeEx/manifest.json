@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Custom Script Loader",
+  "version": "1.0",
+  "description": "Load a custom script on specified websites",
+  "permissions": [
+    "activeTab"
+  ],
+  "icons": {
+    "48": "icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://thespecialcharacter.com/courses/full-stack-development"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ]
+}
