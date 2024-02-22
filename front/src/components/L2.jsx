@@ -27,8 +27,8 @@ export default function L1({ to, from, c1, c2 }) {
         label: "2",
         //data: show.map((x) => x.D3),
         data: show.slice(to, from).map((x) => x.D2),
-        backgroundColor: "pink",
-        borderColor: "plink",
+        backgroundColor: "#7FFF00",
+        borderColor: "#7FFF00",
         pointBorderColor: "black",
         fill: true,
         tension: 0.1,
@@ -37,8 +37,8 @@ export default function L1({ to, from, c1, c2 }) {
         label: "3",
         //data: show.map((x) => x.D3),
         data: show.slice(to, from).map((x) => x.D3),
-        backgroundColor: "yellow",
-        borderColor: "yellow",
+        backgroundColor: "purple",
+        borderColor: "purple",
         pointBorderColor: "black",
         fill: true,
         tension: 0.1,
@@ -76,6 +76,57 @@ export default function L1({ to, from, c1, c2 }) {
     ],
   };
 
+  const data2 = {
+    labels: show.map((x) => x.I),
+    //labels: show.slice(to, from).map((x) => x.I),
+    datasets: [
+      {
+        label: "2",
+        data: show.map((x) => x.D2),
+        //data: show.slice(to, from).map((x) => x.D2),
+        backgroundColor: "gray",
+        borderColor: "gray",
+        pointBorderColor: "black",
+        fill: true,
+        tension: 0.1,
+      },
+    ],
+  };
+
+  const data3 = {
+    labels: show.map((x) => x.I),
+    //labels: show.slice(to, from).map((x) => x.I),
+    datasets: [
+      {
+        label: "3",
+        data: show.map((x) => x.D3),
+        //data: show.slice(to, from).map((x) => x.D3),
+        backgroundColor: "gray",
+        borderColor: "gray",
+        pointBorderColor: "black",
+        fill: true,
+        tension: 0.1,
+      },
+    ],
+  };
+
+  const data5 = {
+    labels: show.map((x) => x.I),
+    //labels: show.slice(to, from).map((x) => x.I),
+    datasets: [
+      {
+        label: "5",
+        data: show.map((x) => x.D5),
+        //data: show.slice(to, from).map((x) => x.D5),
+        backgroundColor: "gray",
+        borderColor: "gray",
+        pointBorderColor: "black",
+        fill: true,
+        tension: 0.1,
+      },
+    ],
+  };
+
   function changer(data) {
     const uniqueIds = new Set();
     return data.filter((entry) => {
@@ -101,7 +152,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D2: i <= 1 ? -i : i,
+              D2: i <= 2 ? -i : i,
             };
           }
           i++;
@@ -151,7 +202,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D5: i <= 10 ? -i : i,
+              D5: i <= 5 ? -i : i,
             };
           }
           i++;
@@ -352,7 +403,7 @@ export default function L1({ to, from, c1, c2 }) {
   };
 
   useEffect(() => {
-    //seter();
+    seter();
     //cheker();
     //box2Fun();
     //box3Fun();
@@ -363,64 +414,59 @@ export default function L1({ to, from, c1, c2 }) {
     getData();
   }, []);
 
-  let BA = true;
-  let BB = [];
-  chartArr.forEach((x, i) => {
-    if (
-      BA &&
-      x.D2 >= 4 &&
-      chartArr[i + 1]?.D2 === 0 &&
-      chartArr[i + 2]?.D2 === 0 &&
-      chartArr[i + 3]?.D2 === 0 &&
-      x.I >= 50000 &&
-      x.I <= 60000
-    ) {
-      BB.push({
-        i: x.I,
-        val: 1,
-      });
-      BA = false;
-    } else if (x.D2 === 0) {
-      BA = true;
-    }
-  });
-  console.log(BB);
-
   return (
     <div>
       {err?.message === undefined ? (
-        <Line
-          className="rotate-90 p-6 md:rotate-0"
-          data={data}
-          options={{
-            responsive: true,
-            scales: {
-              y: {
-                display: true,
-              },
-              x: {
-                display: true,
-              },
-            },
-          }}
-        />
-      ) : (
         <div>
-          <h1> {err?.message}</h1>
           <Line
-            data={data}
+            className=""
+            data={data2}
             options={{
               responsive: true,
               scales: {
                 y: {
-                  display: false,
+                  display: true,
                 },
                 x: {
-                  display: false,
+                  display: true,
                 },
               },
             }}
           />
+          <Line
+            className=""
+            data={data3}
+            options={{
+              responsive: true,
+              scales: {
+                y: {
+                  display: true,
+                },
+                x: {
+                  display: true,
+                },
+              },
+            }}
+          />
+          <Line
+            className=""
+            data={data5}
+            options={{
+              responsive: true,
+              scales: {
+                y: {
+                  display: true,
+                },
+                x: {
+                  display: true,
+                },
+              },
+            }}
+          />
+        </div>
+      ) : (
+        <div>
+          <h1> {err?.message}</h1>
         </div>
       )}
     </div>

@@ -21,16 +21,16 @@ export default function LineM({ to, from, c1, c2 }) {
   const [err, setErr] = useState({});
 
   const data = {
-    //labels: show.map((x) => x.I),
-    labels: show.slice(to, from).map((x) => x.I),
+    labels: show.map((x) => x.I),
+    //labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "",
-        //data: show.map((x) => x.buger),
-        data: show.slice(to, from).map((x) => x.buger),
+        data: show.map((x) => x.buger),
+        //data: show.slice(to, from).map((x) => x.buger),
         backgroundColor: "black",
         borderColor: "red",
-        pointBorderColor: "blue",
+        pointBorderColor: "yellow",
         fill: true,
         tension: 0.1,
       },
@@ -78,17 +78,17 @@ export default function LineM({ to, from, c1, c2 }) {
 
   const seter = () => {
     if (show.length >= 10) {
-      let setArr = show.slice(show.length - 300, show.length);
+      let setArr = show.slice(show.length - 100, show.length);
       setShow(setArr);
     }
     if (chartArr.length >= 800) {
-      let setArr = chartArr.slice(chartArr.length - 800, chartArr.length);
+      let setArr = chartArr.slice(chartArr.length - 500, chartArr.length);
       setChartArr(setArr);
     }
   };
 
   useEffect(() => {
-    //seter();
+    seter();
   }, [chartArr.length]);
 
   useEffect(() => {
@@ -100,7 +100,7 @@ export default function LineM({ to, from, c1, c2 }) {
       {err?.message === undefined ? (
         <div>
           <Line
-            className="rotate-90 p-6 md:rotate-0"
+            className=""
             data={data}
             options={{
               responsive: true,

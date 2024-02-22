@@ -23,13 +23,13 @@ export default function BarC({ to, from }) {
   const [err, setErr] = useState({});
 
   const data = {
-    //labels: show.map((x) => x.I),
-    labels: show.slice(to, from).map((x) => x.I),
+    labels: show.map((x) => x.I),
+    //labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "",
-        //data: show.map((x) => x.X?.split("x")[0]),
-        data: show.slice(to, from).map((x) => +x.X?.split("x")[0]),
+        data: show.map((x) => x.X?.split("x")[0]),
+        //data: show.slice(to, from).map((x) => +x.X?.split("x")[0]),
         backgroundColor: "aqua",
         borderColor: "black",
         borderWidth: 1,
@@ -82,7 +82,7 @@ export default function BarC({ to, from }) {
   };
 
   useEffect(() => {
-    //seter();
+    seter();
   }, [chartArr.length]);
 
   useEffect(() => {
@@ -132,7 +132,7 @@ export default function BarC({ to, from }) {
       {err?.message === undefined ? (
         <div>
           <Bar
-            className="rotate-90 p-6 md:rotate-0"
+            className=""
             data={data}
             options={{
               responsive: true,
