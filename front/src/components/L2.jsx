@@ -425,10 +425,10 @@ export default function L1({ to, from, c1, c2 }) {
               responsive: true,
               scales: {
                 y: {
-                  display: true,
+                  display: false,
                 },
                 x: {
-                  display: true,
+                  display: false,
                 },
               },
             }}
@@ -440,10 +440,10 @@ export default function L1({ to, from, c1, c2 }) {
               responsive: true,
               scales: {
                 y: {
-                  display: true,
+                  display: false,
                 },
                 x: {
-                  display: true,
+                  display: false,
                 },
               },
             }}
@@ -455,10 +455,10 @@ export default function L1({ to, from, c1, c2 }) {
               responsive: true,
               scales: {
                 y: {
-                  display: true,
+                  display: false,
                 },
                 x: {
-                  display: true,
+                  display: false,
                 },
               },
             }}

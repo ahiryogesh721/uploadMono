@@ -37,6 +37,23 @@ export default function LineM({ to, from, c1, c2 }) {
     ],
   };
 
+  const data1 = {
+    labels: show.slice(show.length - 100, show.length).map((x) => x.I),
+    //labels: show.slice(to, from).map((x) => x.I),
+    datasets: [
+      {
+        label: "",
+        data: show.slice(show.length - 100, show.length).map((x) => x.buger),
+        //data: show.slice(to, from).map((x) => x.buger),
+        backgroundColor: "black",
+        borderColor: "red",
+        pointBorderColor: "yellow",
+        fill: true,
+        tension: 0.1,
+      },
+    ],
+  };
+
   function changer(data) {
     const uniqueIds = new Set();
     return data.filter((entry) => {
@@ -78,11 +95,11 @@ export default function LineM({ to, from, c1, c2 }) {
 
   const seter = () => {
     if (show.length >= 10) {
-      let setArr = show.slice(show.length - 100, show.length);
+      let setArr = show.slice(show.length - 1500, show.length);
       setShow(setArr);
     }
     if (chartArr.length >= 800) {
-      let setArr = chartArr.slice(chartArr.length - 500, chartArr.length);
+      let setArr = chartArr.slice(chartArr.length - 2000, chartArr.length);
       setChartArr(setArr);
     }
   };
@@ -99,9 +116,30 @@ export default function LineM({ to, from, c1, c2 }) {
     <div>
       {err?.message === undefined ? (
         <div>
+          <h3 className="flex justify-center">
+            Money Flow Chart(last 1500 crashes)
+          </h3>
           <Line
             className=""
             data={data}
+            options={{
+              responsive: true,
+              scales: {
+                y: {
+                  display: false,
+                },
+                x: {
+                  display: false,
+                },
+              },
+            }}
+          />
+          <h3 className="flex justify-center">
+            Money Flow Chart(last 100 crashes)
+          </h3>
+          <Line
+            className=""
+            data={data1}
             options={{
               responsive: true,
               scales: {

@@ -138,7 +138,10 @@ export default function BarC({ to, from }) {
               responsive: true,
               scales: {
                 y: {
-                  display: true,
+                  display: false,
+                },
+                x: {
+                  display: false,
                 },
               },
             }}
