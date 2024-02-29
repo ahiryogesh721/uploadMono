@@ -11,7 +11,6 @@ import {
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import io from "socket.io-client";
-import jsonData from "../../../front/file_667c37c4-afc3-4ad3-a29d-625c1bd5795f.json";
 
 Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
