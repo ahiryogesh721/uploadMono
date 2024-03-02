@@ -36,6 +36,21 @@ export default function BarC({ to, from }) {
     ],
   };
 
+  const data1 = {
+    labels: show.map((x) => x.I),
+    //labels: show.slice(to, from).map((x) => x.time),
+    datasets: [
+      {
+        label: "",
+        data: show.map((x) => x.players),
+        //data: show.slice(to, from).map((x) => x.players),
+        backgroundColor: "aqua",
+        borderColor: "black",
+        borderWidth: 1,
+      },
+    ],
+  };
+
   function changer(data) {
     const uniqueIds = new Set();
     return data.filter((entry) => {
@@ -91,22 +106,9 @@ export default function BarC({ to, from }) {
   return (
     <div>
       {err?.message === undefined ? (
-        <Bar
-          className="rotate-90 p-6 md:rotate-0"
-          data={data}
-          options={{
-            responsive: true,
-            scales: {
-              y: {
-                display: true,
-              },
-            },
-          }}
-        />
-      ) : (
         <div>
-          <h1> {err?.message}</h1>
           <Bar
+            className="rotate-90 p-6 md:rotate-0"
             data={data}
             options={{
               responsive: true,
@@ -117,7 +119,21 @@ export default function BarC({ to, from }) {
               },
             }}
           />
+          <Bar
+            className="rotate-90 p-6 md:rotate-0"
+            data={data1}
+            options={{
+              responsive: true,
+              scales: {
+                y: {
+                  display: true,
+                },
+              },
+            }}
+          />
         </div>
+      ) : (
+        <div></div>
       )}
     </div>
   );

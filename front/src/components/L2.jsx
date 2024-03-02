@@ -24,11 +24,11 @@ export default function L1({ to, from, c1, c2 }) {
     datasets: [
       {
         label: "2",
-        data: show.map((x) => x.D3),
+        data: show.map((x) => x.D2),
         //data: show.slice(to, from).map((x) => x.D2),
-        backgroundColor: "pink",
-        borderColor: "plink",
-        pointBorderColor: "black",
+        backgroundColor: "red",
+        borderColor: " #778899",
+        pointBorderColor: " #778899",
         fill: true,
         tension: 0.1,
       },
@@ -36,16 +36,16 @@ export default function L1({ to, from, c1, c2 }) {
         label: "3",
         data: show.map((x) => x.D3),
         //data: show.slice(to, from).map((x) => x.D3),
-        backgroundColor: "yellow",
-        borderColor: "yellow",
-        pointBorderColor: "black",
+        backgroundColor: "orange",
+        borderColor: "orange",
+        pointBorderColor: "orange",
         fill: true,
         tension: 0.1,
       },
       {
         label: "5",
-        data: show.map((x) => x.D5),
-        //data: show.slice(to, from).map((x) => x.D5),
+        //data: show.map((x) => x.D5),
+        data: show.slice(to, from).map((x) => x.D5),
         backgroundColor: "red",
         borderColor: "red",
         pointBorderColor: "black",
@@ -100,7 +100,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D2: i <= 1 ? -i : i,
+              D2: i <= 2 ? -i : i,
             };
           }
           i++;
@@ -146,11 +146,11 @@ export default function L1({ to, from, c1, c2 }) {
         while (finder) {
           let indexOfBreker = I - i;
           let lx = arr[indexOfBreker]?.X?.split("x")[0];
-          if (lx >= 10) {
+          if (lx >= 5) {
             finder = false;
             return {
               ...x,
-              D5: i <= 3 ? -i : i,
+              D5: i <= 5 ? -i : i,
             };
           }
           i++;
@@ -251,119 +251,6 @@ export default function L1({ to, from, c1, c2 }) {
     try {
       await axios.post("/post/records", data);
     } catch (error) {}
-  };
-
-  const init5 = () => {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, "0");
-    const minutes = now.getMinutes().toString().padStart(2, "0");
-    const seconds = now.getSeconds().toString().padStart(2, "0");
-    const timestamp = `${hours}:${minutes}:${seconds}`;
-
-    let token = localStorage.getItem("mainTok5");
-    if (token === null) {
-      chartArr.reduceRight(
-        (c, cc, i) => {
-          if (cc.D5 > 0) {
-            return { ...c, plu: c?.plu + 1, min: c?.min };
-          }
-          if (cc.D5 < 0) {
-            return { ...c, plu: c?.plu, min: c?.min + 1 };
-          }
-          if (c.plu === 5 && c.min === 0) {
-            const data = {
-              iPOint: chartArr[chartArr.length - 1]?.I,
-              number: 5,
-              time: timestamp,
-            };
-            sendTdata(data);
-            localStorage.setItem("mainTok5", JSON.stringify({ val: true }));
-          }
-          return c;
-        },
-        { plu: 0, min: 0 }
-      );
-    }
-  };
-
-  const init20 = () => {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, "0");
-    const minutes = now.getMinutes().toString().padStart(2, "0");
-    const seconds = now.getSeconds().toString().padStart(2, "0");
-    const timestamp = `${hours}:${minutes}:${seconds}`;
-
-    let token = localStorage.getItem("mainTok20");
-    if (token === null) {
-      chartArr.reduceRight(
-        (c, cc, i) => {
-          if (c.min < 0) {
-            console.log(c);
-          }
-          if (cc.D20 > 0) {
-            return { ...c, plu: c?.plu + 1, min: c?.min };
-          }
-          if (cc.D20 < 0) {
-            return { ...c, plu: c?.plu, min: c?.min + 1 };
-          }
-          if (c.plu === 12 && c.min === 0) {
-            const data = {
-              iPOint: chartArr[chartArr.length - 1]?.I,
-              number: 20,
-              time: timestamp,
-            };
-            sendTdata(data);
-            localStorage.setItem("mainTok20", JSON.stringify({ val: true }));
-          }
-          return c;
-        },
-        { plu: 0, min: 0 }
-      );
-    }
-  };
-
-  const caler5 = () => {
-    const LD5 = chartArr[chartArr.length - 1]?.D5;
-    if (LD5 < 0) {
-      socket.emit("msg", "faill");
-      localStorage.removeItem("mainTok5");
-    }
-  };
-
-  const caler20 = () => {
-    const LD20 = chartArr[chartArr.length - 1];
-    if (LD20?.D20 > 0 || LD20?.D10 > 0) {
-      socket.emit("msg", "GO ON");
-    }
-    if (LD20?.D20 < 0) {
-      socket.emit("msg", "faill");
-      localStorage.removeItem("mainTok20");
-    }
-  };
-
-  const chek5 = () => {
-    init5();
-    let token = localStorage.getItem("mainTok5");
-    if (token === null) return;
-    token = JSON.parse(token);
-    if (token.val) {
-      caler5();
-    }
-  };
-
-  const chek20 = () => {
-    init20();
-    let token = localStorage.getItem("mainTok20");
-    if (token === null) return;
-    token = JSON.parse(token);
-    if (token.val) {
-      caler20();
-    }
-  };
-
-  const cheker = () => {
-    chek5();
-    chek20();
   };
 
   useEffect(() => {

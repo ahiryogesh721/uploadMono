@@ -57,7 +57,7 @@ const moneyDellet = async (req, res) => {
 
 const moneyGet = async (req, res) => {
   let allData = await moneyModel.find().exec();
-  res.json(allData);
+  res.json(allData.slice(allData.length - 5000, allData.length));
 };
 
 const recordsGet = async (req, res) => {
