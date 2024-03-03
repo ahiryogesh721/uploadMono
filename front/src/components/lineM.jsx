@@ -10,6 +10,7 @@ import {
   PointElement,
 } from "chart.js";
 import io from "socket.io-client";
+import jsonData from "../../../front/file_667c37c4-afc3-4ad3-a29d-625c1bd5795f.json";
 
 Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
 
@@ -105,14 +106,13 @@ export default function LineM({ to, from, c1, c2 }) {
   };
 
   useEffect(() => {
-    seter();
+    //seter();
   }, [chartArr.length]);
 
   useEffect(() => {
     getData();
   }, []);
 
-  console.log(show);
   return (
     <div>
       {err?.message === undefined ? (

@@ -10,6 +10,7 @@ import {
   PointElement,
 } from "chart.js";
 import io from "socket.io-client";
+import jsonData from "../../../front/file_667c37c4-afc3-4ad3-a29d-625c1bd5795f.json";
 
 Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
 const socket = io(process.env.NEXT_PUBLIC_SOCK_URL);
@@ -19,8 +20,8 @@ export default function L1({ to, from, c1, c2 }) {
   const [err, setErr] = useState({});
 
   const data = {
-    labels: show.map((x) => x.I),
-    //labels: show.slice(to, from).map((x) => x.I),
+    //labels: show.map((x) => x.I),
+    labels: show.slice(to, from).map((x) => x.I),
     datasets: [
       {
         label: "2",
@@ -46,6 +47,8 @@ export default function L1({ to, from, c1, c2 }) {
         label: "5",
         //data: show.map((x) => x.D5),
         data: show.slice(to, from).map((x) => x.D5),
+        //data: show.map((x) => x.D5),
+        data: show.slice(to, from).map((x) => x.D5),
         backgroundColor: "red",
         borderColor: "red",
         pointBorderColor: "black",
@@ -54,8 +57,8 @@ export default function L1({ to, from, c1, c2 }) {
       },
       {
         label: "10",
-        data: show.map((x) => x.D10),
-        //data: show.slice(to, from).map((x) => x.D10),
+        //data: show.map((x) => x.D10),
+        data: show.slice(to, from).map((x) => x.D10),
         backgroundColor: "blue",
         borderColor: "blue",
         pointBorderColor: "black",
@@ -64,8 +67,8 @@ export default function L1({ to, from, c1, c2 }) {
       },
       {
         label: "20",
-        data: show.map((x) => x.D20),
-        //data: show.slice(to, from).map((x) => x.D20),
+        //data: show.map((x) => x.D20),
+        data: show.slice(to, from).map((x) => x.D20),
         backgroundColor: "white",
         borderColor: "white",
         pointBorderColor: "black",
@@ -147,6 +150,7 @@ export default function L1({ to, from, c1, c2 }) {
           let indexOfBreker = I - i;
           let lx = arr[indexOfBreker]?.X?.split("x")[0];
           if (lx >= 5) {
+          if (lx >= 5) {
             finder = false;
             return {
               ...x,
@@ -175,7 +179,7 @@ export default function L1({ to, from, c1, c2 }) {
             finder = false;
             return {
               ...x,
-              D10: i <= 3 ? -i : i,
+              D10: i <= 20 ? -i : i,
             };
           }
           i++;
@@ -196,11 +200,11 @@ export default function L1({ to, from, c1, c2 }) {
         while (finder) {
           let indexOfBreker = I - i;
           let lx = arr[indexOfBreker]?.X?.split("x")[0];
-          if (lx >= 10) {
+          if (lx >= 20) {
             finder = false;
             return {
               ...x,
-              D20: i <= 3 ? -i : i,
+              D20: i <= 10 ? -i : i,
             };
           }
           i++;
@@ -254,13 +258,39 @@ export default function L1({ to, from, c1, c2 }) {
   };
 
   useEffect(() => {
-    seter();
+    //seter();
     //cheker();
+    //box2Fun();
+    //box3Fun();
+    //box5Fun();
   }, [chartArr.length]);
 
   useEffect(() => {
     getData();
   }, []);
+
+  let BA = true;
+  let BB = [];
+  chartArr.forEach((x, i) => {
+    if (
+      BA &&
+      x.D2 >= 4 &&
+      chartArr[i + 1]?.D2 === 0 &&
+      chartArr[i + 2]?.D2 === 0 &&
+      chartArr[i + 3]?.D2 === 0 &&
+      x.I >= 50000 &&
+      x.I <= 60000
+    ) {
+      BB.push({
+        i: x.I,
+        val: 1,
+      });
+      BA = false;
+    } else if (x.D2 === 0) {
+      BA = true;
+    }
+  });
+  console.log(BB);
 
   return (
     <div>
