@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const conectMongo = require("./config/mongo");
+const { Server } = require("socket.io");
 
 const credentials = require("./middleware/corsMiddle");
 const cors = require("cors");
@@ -25,8 +26,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", rootRoute);
 app.use("/post", postRoute);
 
-mongoess.connection.once("open", () => {
-  app.listen(PORT, () => {
-    console.log(`backend server is runing on PORT:${PORT}`);
-  });
+const appLis = app.listen(PORT, () => {
+  console.log(`backend and sock server are runing on PORT:${PORT}`);
+});
+
+const io = new Server(appLis, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
 });

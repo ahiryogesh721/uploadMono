@@ -18,24 +18,9 @@ const io = new Server(appL, {
   },
 });
 
-io.on("connection", (socket) => {
-  socket.on("msg", (data) => {
-    const numbers = ["+919924261500"];
-    numbers.forEach((x) => {
-      client.messages
-        .create({
-          body: `${data}`,
-          from: "+12059273808",
-          to: x,
-        })
-        .then((msg) => {
-          console.log("sTOPED");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    });
-  });
+app.post("/send", (req, res, next) => {
+  io.emit("banger", req.body);
+  res.sendStatus(200);
 });
 
 module.exports = io;

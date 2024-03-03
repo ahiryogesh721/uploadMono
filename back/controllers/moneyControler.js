@@ -3,10 +3,21 @@ const {
   recordsModel5,
   recordsModel20,
 } = require("../models/moneyModel");
-const io = require("../server1");
+//const io = require("../server1");
 const accountSid = "AC1365e0479e0ea18054b3f69f3b441e0f";
 const authToken = "5412c9f13c254c91a01e8e15eb256fc0";
 const client = require("twilio")(accountSid, authToken);
+
+const sendToSock = async (data) => {
+  fetch("https://uploadmono-sock.onrender.com/send", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Request-Private-Network": "true",
+    },
+    body: JSON.stringify(data),
+  });
+};
 
 const moneyPost = async (req, res) => {
   const lastEntry = await moneyModel.findOne().sort({ _id: -1 }).exec();
@@ -39,7 +50,8 @@ const moneyPost = async (req, res) => {
       });
       if (result) {
         console.log(result);
-        io.emit("banger", result);
+        sendToSock(result);
+        //io.emit("banger", result);
       }
       res.sendStatus(200);
     } catch (error) {
@@ -130,4 +142,10 @@ const records = async (req, res) => {
   } else return res.sendStatus(400);
 };
 
-module.exports = { moneyPost, moneyGet, records, recordsGet, moneyDellet };
+module.exports = {
+  moneyPost,
+  moneyGet,
+  records,
+  recordsGet,
+  moneyDellet,
+};

@@ -12,6 +12,7 @@ import {
 import io from "socket.io-client";
 
 Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
+
 const socket = io(process.env.NEXT_PUBLIC_SOCK_URL);
 
 export default function LineM({ to, from, c1, c2 }) {
