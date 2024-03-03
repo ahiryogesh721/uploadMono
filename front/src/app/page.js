@@ -18,9 +18,6 @@ export default function Home() {
       <div id="lineM">
         <LineM to={to} from={from} />
       </div>
-      {/* <div id="lineM">
-        <LineM to={to - 1000} from={from + 1000} />
-      </div> */}
     </div>
   );
 }
