@@ -9,15 +9,19 @@ const authToken = "5412c9f13c254c91a01e8e15eb256fc0";
 const client = require("twilio")(accountSid, authToken);
 
 const sendToSock = async (data) => {
-  console.log("making an api call");
-  fetch("https://uploadmono-sock.onrender.com/send", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Request-Private-Network": "true",
-    },
-    body: JSON.stringify(data),
-  });
+  try {
+    fetch("https://sock-11f1.onrender.com/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Request-Private-Network": "true",
+      },
+      body: JSON.stringify(data),
+    });
+    console.log("api call succ");
+  } catch (error) {
+    console.log("couldnt make and api for sock");
+  }
 };
 
 const moneyPost = async (req, res) => {
