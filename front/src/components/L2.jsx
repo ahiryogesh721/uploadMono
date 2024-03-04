@@ -294,7 +294,7 @@ export default function L1({ to, from, c1, c2 }) {
       setShow(setArr);
     }
     if (chartArr.length >= 800) {
-      let setArr = chartArr.slice(chartArr.length - 800, chartArr.length);
+      let setArr = chartArr.slice(chartArr.length - 500, chartArr.length);
       setChartArr(setArr);
     }
   };

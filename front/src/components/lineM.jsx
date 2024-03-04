@@ -95,11 +95,11 @@ export default function LineM({ to, from, c1, c2 }) {
 
   const seter = () => {
     if (show.length >= 10) {
-      let setArr = show.slice(show.length - 1500, show.length);
+      let setArr = show.slice(show.length - 100, show.length);
       setShow(setArr);
     }
     if (chartArr.length >= 800) {
-      let setArr = chartArr.slice(chartArr.length - 2000, chartArr.length);
+      let setArr = chartArr.slice(chartArr.length - 100, chartArr.length);
       setChartArr(setArr);
     }
   };
@@ -116,7 +116,7 @@ export default function LineM({ to, from, c1, c2 }) {
     <div>
       {err?.message === undefined ? (
         <div>
-          <h3 className="flex justify-center">
+          {/* <h3 className="flex justify-center">
             Money Flow Chart(last 1500 crashes)
           </h3>
           <Line
@@ -133,7 +133,7 @@ export default function LineM({ to, from, c1, c2 }) {
                 },
               },
             }}
-          />
+          /> */}
           <h3 className="flex justify-center">
             Money Flow Chart(last 100 crashes)
           </h3>
