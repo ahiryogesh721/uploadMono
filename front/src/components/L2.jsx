@@ -84,9 +84,9 @@ export default function L1({ to, from, c1, c2 }) {
         label: "2",
         data: show.map((x) => x.D2),
         //data: show.slice(to, from).map((x) => x.D2),
-        backgroundColor: "gray",
+        backgroundColor: "black",
         borderColor: "gray",
-        pointBorderColor: "black",
+        pointBorderColor: "gray",
         fill: true,
         tension: 0.1,
       },
@@ -101,9 +101,9 @@ export default function L1({ to, from, c1, c2 }) {
         label: "3",
         data: show.map((x) => x.D3),
         //data: show.slice(to, from).map((x) => x.D3),
-        backgroundColor: "gray",
+        backgroundColor: "black",
         borderColor: "gray",
-        pointBorderColor: "black",
+        pointBorderColor: "gray",
         fill: true,
         tension: 0.1,
       },
@@ -118,9 +118,9 @@ export default function L1({ to, from, c1, c2 }) {
         label: "5",
         data: show.map((x) => x.D5),
         //data: show.slice(to, from).map((x) => x.D5),
-        backgroundColor: "gray",
+        backgroundColor: "black",
         borderColor: "gray",
-        pointBorderColor: "black",
+        pointBorderColor: "gray",
         fill: true,
         tension: 0.1,
       },
@@ -305,109 +305,8 @@ export default function L1({ to, from, c1, c2 }) {
     } catch (error) {}
   };
 
-  const box2Fun = () => {
-    let box2 = [];
-    let alow1 = true;
-    chartArr.forEach((x, i) => {
-      if (
-        alow1 &&
-        x.D2 === -1 &&
-        chartArr[i - 1].D2 === -1 &&
-        chartArr[i - 2].D2 === -1 &&
-        chartArr[i - 3].D2 === -1
-      ) {
-        let obj = {};
-        let condition = true;
-        let I = 1;
-        obj.IP = x.I;
-        obj.MS = [];
-        while (condition) {
-          let nextInVal = chartArr[i + I];
-          if (nextInVal?.D2 === -1) {
-            obj.MS.push({ i: nextInVal?.I, val: nextInVal?.D2 });
-          } else if (nextInVal?.D2 === 0) {
-            box2.push(obj);
-            condition = false;
-          }
-          I++;
-        }
-        /* chartArr[i + 1]?.D2 === -1
-          ? box2.push({ i: x.I, val: 1 })
-          : box2.push({ i: x.I, val: 0 }); */
-        alow1 = false;
-      } else if (x.D2 === 0) {
-        alow1 = true;
-      }
-    });
-    //console.log(box2);
-
-    let box3 = [];
-    let alllow = true;
-    box2.forEach((x, i) => {
-      if (x.val === 1 && alllow) {
-        box3.push({ i: x.i, val: box2[i + 1]?.val });
-        alllow = false;
-      } else if (x.val === 0) {
-        alllow = true;
-      }
-    });
-    //console.log(box3);
-  };
-
-  const box5Fun = () => {
-    let box5 = [];
-    let alow = true;
-    chartArr.forEach((x, i) => {
-      if (+x.D5 >= 15 && alow) {
-        +chartArr[i + 1]?.D5 <= -1
-          ? box5.push({ iX: x.D5, i: x.I, val: 1 })
-          : +chartArr[i + 2]?.D5 <= -1
-          ? box5.push({ iX: x.D5, i: x.I, val: 2 })
-          : +chartArr[i + 3]?.D5 <= -1
-          ? box5.push({ iX: x.D5, i: x.I, val: 3 })
-          : +chartArr[i + 4]?.D5 <= -1
-          ? box5.push({ iX: x.D5, i: x.I, val: 4 })
-          : +chartArr[i + 5]?.D5 <= -1
-          ? box5.push({ iX: x.D5, i: x.I, val: 5 })
-          : /* : +chartArr[i - 1]?.X?.split("x")[0] >= 5
-          ? ""
-          : +chartArr[i - 2]?.X?.split("x")[0] >= 5
-          ? ""
-          : +chartArr[i - 3]?.X?.split("x")[0] >= 5
-          ? ""
-          : +chartArr[i - 4]?.X?.split("x")[0] >= 5
-          ? "" */
-            box5.push({ iX: x.D5, i: x.I, val: 0 });
-        alow = false;
-      } else if (+x.D5 === 0) {
-        alow = true;
-      }
-    });
-    console.log(box5);
-  };
-
-  const box3Fun = () => {
-    let allow = true;
-    let box3 = [];
-    chartArr.forEach((x, i) => {
-      if (x.D3 === 2 || x.D3 === 3 || x.D3 === 4) {
-        chartArr[i + 1]?.D3 === -1
-          ? box3.push({ i: x.I, val: 1 })
-          : box3.push({ i: x.I, val: 0 });
-        allow = false;
-      } else if (x.D3 === 0) {
-        allow = true;
-      }
-    });
-    console.log(box3);
-  };
-
   useEffect(() => {
     seter();
-    //cheker();
-    //box2Fun();
-    //box3Fun();
-    //box5Fun();
   }, [chartArr.length]);
 
   useEffect(() => {
@@ -419,7 +318,7 @@ export default function L1({ to, from, c1, c2 }) {
       {err?.message === undefined ? (
         <div>
           <Line
-            className=""
+            className="p-10"
             data={data2}
             options={{
               responsive: true,
@@ -434,7 +333,7 @@ export default function L1({ to, from, c1, c2 }) {
             }}
           />
           <Line
-            className=""
+            className="p-10"
             data={data3}
             options={{
               responsive: true,
@@ -449,7 +348,7 @@ export default function L1({ to, from, c1, c2 }) {
             }}
           />
           <Line
-            className=""
+            className="p-10"
             data={data5}
             options={{
               responsive: true,
