@@ -19,6 +19,7 @@ const io = new Server(appL, {
 });
 
 app.post("/send", (req, res, next) => {
+  console.log(req.body);
   io.emit("banger", req.body);
   res.sendStatus(200);
 });
