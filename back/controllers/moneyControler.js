@@ -3,7 +3,7 @@ const {
   recordsModel5,
   recordsModel20,
 } = require("../models/moneyModel");
-//const io = require("../server1");
+const io = require("../server1");
 const accountSid = "AC1365e0479e0ea18054b3f69f3b441e0f";
 const authToken = "5412c9f13c254c91a01e8e15eb256fc0";
 const client = require("twilio")(accountSid, authToken);
@@ -50,8 +50,8 @@ const moneyPost = async (req, res) => {
       });
       if (result) {
         console.log(result);
-        sendToSock(result);
-        //io.emit("banger", result);
+        //sendToSock(result);
+        io.emit("banger", result);
       }
       res.sendStatus(200);
     } catch (error) {
