@@ -51,7 +51,6 @@ const moneyPost = async (req, res) => {
       if (result) {
         console.log(result);
         sendToSock(result);
-        //io.emit("banger", result);
       }
       res.sendStatus(200);
     } catch (error) {
@@ -68,8 +67,8 @@ const moneyDellet = async (req, res) => {
 };
 
 const moneyGet = async (req, res) => {
-  let allData = await moneyModel.find().exec();
-  res.json(allData.slice(allData.length - 5000, allData.length));
+  let allData = await moneyModel.find().sort({ _id: -1 }).limit(1000).exec();
+  res.json(allData.reverse());
 };
 
 const recordsGet = async (req, res) => {
