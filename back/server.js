@@ -27,12 +27,5 @@ app.use("/", rootRoute);
 app.use("/post", postRoute);
 
 const appLis = app.listen(PORT, () => {
-  console.log(`backend and sock server are runing on PORT:${PORT}`);
-});
-
-const io = new Server(appLis, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
+  console.log(`backend server is runing on PORT:${PORT}`);
 });
