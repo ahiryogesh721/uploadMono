@@ -11,18 +11,20 @@ const itrater = () => {
     )
     .textContent.trim()
     .split(" ")[0];
+
   let playersGetsSpanVal = document
     .querySelector(
       "#games_page > div.crash.games-container__game > div.crash-players-bets.crash__wrap.crash__wrap--left > div.crash-players-bets__total.crash-total > div:nth-child(3) > span"
     )
     .textContent.trim()
     .split(" ")[0];
+
   let xGVal = document
     .querySelector(
       "#games_page > div.crash.games-container__game > div.crash__wrap.crash__wrap--main > div.crash__game.crash-game > div.crash-game__timeline > svg > g:nth-child(5) > text"
     )
     .textContent.trim();
-  if (playersGetsSpanVal === "0" && xGVal === "x") {
+  if (playersGetsSpanVal === "0") {
     fetch("http://localhost:3500/post", {
       method: "POST",
       headers: {

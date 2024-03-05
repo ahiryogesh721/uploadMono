@@ -112,6 +112,8 @@ export default function LineM({ to, from, c1, c2 }) {
     getData();
   }, []);
 
+  console.log(chartArr);
+
   return (
     <div>
       {err?.message === undefined ? (
