@@ -72,7 +72,7 @@ const moneyDellet = async (req, res) => {
 };
 
 const moneyGet = async (req, res) => {
-  let allData = await moneyModel.find().sort({ _id: -1 }).limit(1000).exec();
+  let allData = await moneyModel.find().sort({ _id: -1 }).limit(2000).exec();
   res.json(allData.reverse());
 };
 
