@@ -25,38 +25,50 @@ const itrater = () => {
     )
     .textContent.trim();
 
-  let adj = +xGVal.slice(0, xGVal.length - 1);
-  console.log(adj);
+  let bobVal = +xGVal.slice(0, xGVal.length - 1);
 
-  let userTag1 = document.querySelector(
-    "#games_page > div.crash.games-container__game > div.crash-players-bets.crash__wrap.crash__wrap--left > div.crash-players-bets__results.crash-results > div > table > tbody > tr:nth-child(1)"
-  );
+  let userTag1 = document
+    .querySelector(
+      "#games_page > div.crash.games-container__game > div.crash-players-bets.crash__wrap.crash__wrap--left > div.crash-players-bets__results.crash-results > div > table > tbody > tr:nth-child(1)"
+    )
+    .classList.contains("crash-results__row--loss");
 
-  let userTag2 = document.querySelector(
-    "#games_page > div.crash.games-container__game > div.crash-players-bets.crash__wrap.crash__wrap--left > div.crash-players-bets__results.crash-results > div > table > tbody > tr:nth-child(2)"
-  );
+  let userTag2 = document
+    .querySelector(
+      "#games_page > div.crash.games-container__game > div.crash-players-bets.crash__wrap.crash__wrap--left > div.crash-players-bets__results.crash-results > div > table > tbody > tr:nth-child(2)"
+    )
+    .classList.contains("crash-results__row--loss");
 
-  let userTag3 = document.querySelector(
-    "#games_page > div.crash.games-container__game > div.crash-players-bets.crash__wrap.crash__wrap--left > div.crash-players-bets__results.crash-results > div > table > tbody > tr:nth-child(3)"
-  );
+  let userTag3 = document
+    .querySelector(
+      "#games_page > div.crash.games-container__game > div.crash-players-bets.crash__wrap.crash__wrap--left > div.crash-players-bets__results.crash-results > div > table > tbody > tr:nth-child(3)"
+    )
+    .classList.contains("crash-results__row--loss");
 
-  let userTag4 = document.querySelector(
-    "#games_page > div.crash.games-container__game > div.crash-players-bets.crash__wrap.crash__wrap--left > div.crash-players-bets__results.crash-results > div > table > tbody > tr:nth-child(4)"
-  );
+  let userTag4 = document
+    .querySelector(
+      "#games_page > div.crash.games-container__game > div.crash-players-bets.crash__wrap.crash__wrap--left > div.crash-players-bets__results.crash-results > div > table > tbody > tr:nth-child(4)"
+    )
+    .classList.contains("crash-results__row--loss");
 
-  let userTag5 = document.querySelector(
-    "#games_page > div.crash.games-container__game > div.crash-players-bets.crash__wrap.crash__wrap--left > div.crash-players-bets__results.crash-results > div > table > tbody > tr:nth-child(5)"
-  );
+  let userTag5 = document
+    .querySelector(
+      "#games_page > div.crash.games-container__game > div.crash-players-bets.crash__wrap.crash__wrap--left > div.crash-players-bets__results.crash-results > div > table > tbody > tr:nth-child(5)"
+    )
+    .classList.contains("crash-results__row--loss");
 
-  if (
-    playersGetsSpanVal === "0" ||
-    (adj < 2 &&
-      (userTag1.classList.contains("crash-results__row--loss") ||
-        userTag2.classList.contains("crash-results__row--loss") ||
-        userTag3.classList.contains("crash-results__row--loss") ||
-        userTag4.classList.contains("crash-results__row--loss") ||
-        userTag5.classList.contains("crash-results__row--loss")))
-  ) {
+  if (userTag1 || userTag2 || userTag3 || userTag4 || userTag5) {
+    console.log("sending erly");
+    fetch("https://backend-fdok.onrender.com/post", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Request-Private-Network": "true",
+      },
+      body: JSON.stringify({ players, playersBets, playersGets, X }),
+    });
+  } else if (playersGetsSpanVal === "0" && xGVal === "x") {
+    console.log("sending at 0");
     fetch("https://backend-fdok.onrender.com/post", {
       method: "POST",
       headers: {
@@ -66,6 +78,7 @@ const itrater = () => {
       body: JSON.stringify({ players, playersBets, playersGets, X }),
     });
   } else {
+    console.log("recording data");
     playersSpanVal === "0" ? (players = players) : (players = playersSpanVal);
     playersBetsSpanVal === "0"
       ? (playersBets = playersBets)
